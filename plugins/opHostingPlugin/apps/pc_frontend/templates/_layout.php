@@ -38,9 +38,11 @@ var openpne = '.json_encode($jsonData).';
 <?php echo $op_config->get('pc_html_top') ?>
 <div id="Container">
 
-<div id="Header">
-<div id="HeaderContainer">
+<div id="Header" class="navbar">
+<div id="HeaderContainer" class="navbar-inner">
+<div class="container">
 <?php include_partial('global/header') ?>
+</div>
 </div><!-- HeaderContainer -->
 </div><!-- Header -->
 
@@ -141,6 +143,10 @@ document.getElementById("SmtSwitchLink").addEventListener("click", function() {
 <?php use_stylesheet('/opHostingPlugin/css/bootstrap.min.css') ?>
 <?php use_stylesheet('/opHostingPlugin/css/bootstrap-responsive.min.css') ?>
 <?php use_stylesheet('/opHostingPlugin/css/typica-login.css') ?>
+<?php use_javascript('/opHostingPlugin/js/jquery.js', 'last') ?>
+<?php use_javascript('/opHostingPlugin/js/bootstrap.js', 'last') ?>
+<?php use_javascript('/opHostingPlugin/js/backstretch.min.js', 'last') ?>
+<?php use_javascript('/opHostingPlugin/js/typica-login.js', 'last') ?>
 <?php include_stylesheets() ?>
 <?php if (Doctrine::getTable('SnsConfig')->get('customizing_css')): ?>
 <link rel="stylesheet" type="text/css" href="<?php echo url_for('@customizing_css') ?>" />
@@ -297,10 +303,6 @@ document.getElementById("SmtSwitchLink").addEventListener("click", function() {
 </div><!-- Container -->
 <?php echo $op_config->get('pc_html_bottom') ?>
 </div><!-- Body -->
-<?php use_javascript('/opHostingPlugin/js/jquery.js') ?>
-<?php use_javascript('/opHostingPlugin/js/bootstrap.js', 'last') ?>
-<?php use_javascript('/opHostingPlugin/js/backstretch.min.js', 'last') ?>
-<?php use_javascript('/opHostingPlugin/js/typica-login.js', 'last') ?>
 </body>
 </html>
 <?php //ログインページ終了 ?>

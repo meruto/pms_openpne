@@ -1,4 +1,4 @@
 <?php
 return array(
-'status' => 'success',
+  'status' => 'success',
 );

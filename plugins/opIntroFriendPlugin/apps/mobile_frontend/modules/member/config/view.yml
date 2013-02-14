@@ -1,0 +1,15 @@
+profileSuccess:
+  customize:
+    introFriendLink:
+      template: [introfriend, introFriendLink]
+      parts: [menu]
+      is_component: true
+      target: [bottom] 
+
+homeSuccess:
+  customize:
+    noticeIntroFriendUnread:
+      template: [introfriend, noticeUnread]
+      is_component: true
+      parts:    [information]
+      target:   [bottom]

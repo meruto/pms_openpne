@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package packagerversion="1.9.0" version="2.0" xmlns="http://pear.php.net/dtd/package-2.0" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0
+    http://pear.php.net/dtd/tasks-1.0.xsd
+    http://pear.php.net/dtd/package-2.0
+    http://pear.php.net/dtd/package-2.0.xsd">
+ <name>opRankingPlugin</name>
+ <channel>plugins.openpne.jp</channel>
+ <summary>opRankingPlugin</summary>
+ <description>opRankingPlugin</description>
+ <lead>
+  <name>Masato Nagasawa</name>
+  <user>nagasawa</user>
+  <email />
+  <active>yes</active>
+ </lead>
+ <lead>
+  <name>Yuya Watanabe</name>
+  <user>watanabe</user>
+  <email />
+  <active>yes</active>
+ </lead>
+ <date>2011-09-21</date>
+ <time>18:17:18</time>
+ <version>
+  <release>1.0.1</release>
+  <api>1.0.1</api>
+ </version>
+ <stability>
+  <release>beta</release>
+  <api>beta</api>
+ </stability>
+ <license>apache</license>
+ <notes>
+fix bugs
+ </notes>
+ <contents>
+  <dir baseinstalldir="/" name="/">
+   <file baseinstalldir="/" md5sum="ba8dce5cfe090f0f8bb30fecc97948a1" name="apps/mobile_frontend/config/routing.yml" role="data" />
+   <file baseinstalldir="/" md5sum="7a9c79bf88396a5a8f6c170222de45bf" name="apps/mobile_frontend/i18n/messages.ja.xml" role="data" />
+   <file baseinstalldir="/" md5sum="dc7e927bdfc4f5867d9b2be18b7a3ff1" name="apps/mobile_frontend/modules/ranking/actions/actions.class.php" role="data" />
+   <file baseinstalldir="/" md5sum="34786757bbfd45dc66636fc9e7dd9b6c" name="apps/mobile_frontend/modules/ranking/actions/components.class.php" role="data" />
+   <file baseinstalldir="/" md5sum="db4e6b416a9c0a7deaf2eaf4d6cd6990" name="apps/mobile_frontend/modules/ranking/config/cache.yml" role="data" />
+   <file baseinstalldir="/" md5sum="9cbbf2a71ebac31c5e9df7c44c2e0dec" name="apps/mobile_frontend/modules/ranking/config/security.yml" role="data" />
+   <file baseinstalldir="/" md5sum="6c610a2449739585921d02b7a642f7b9" name="apps/mobile_frontend/modules/ranking/config/view.yml" role="data" />
+   <file baseinstalldir="/" md5sum="078fc5961862b0140edc670a8464c408" name="apps/mobile_frontend/modules/ranking/templates/showSuccess.php" role="data" />
+   <file baseinstalldir="/" md5sum="2363c590fd26e052399eebc69f5db5cd" name="apps/mobile_frontend/modules/ranking/templates/_access.php" role="data" />
+   <file baseinstalldir="/" md5sum="83a83c92d44ff834598fddb3fc117115" name="apps/mobile_frontend/modules/ranking/templates/_community.php" role="data" />
+   <file baseinstalldir="/" md5sum="9323cfe5b6b0756e60fcda32260ba33e" name="apps/mobile_frontend/modules/ranking/templates/_friend.php" role="data" />
+   <file baseinstalldir="/" md5sum="2fd840737277ef26f78f6b966633c2eb" name="apps/mobile_frontend/modules/ranking/templates/_menu.php" role="data" />
+   <file baseinstalldir="/" md5sum="b0f2f23720013745b4ce73aeb42ca61a" name="apps/mobile_frontend/modules/ranking/templates/_topic.php" role="data" />
+   <file baseinstalldir="/" md5sum="ba8dce5cfe090f0f8bb30fecc97948a1" name="apps/pc_frontend/config/routing.yml" role="data" />
+   <file baseinstalldir="/" md5sum="b8cf52395d1222ddce4b174c583bd311" name="apps/pc_frontend/i18n/messages.ja.xml" role="data" />
+   <file baseinstalldir="/" md5sum="d704c79ec5336d9502c01c3a4de0a047" name="apps/pc_frontend/modules/ranking/actions/actions.class.php" role="data" />
+   <file baseinstalldir="/" md5sum="34786757bbfd45dc66636fc9e7dd9b6c" name="apps/pc_frontend/modules/ranking/actions/components.class.php" role="data" />
+   <file baseinstalldir="/" md5sum="db4e6b416a9c0a7deaf2eaf4d6cd6990" name="apps/pc_frontend/modules/ranking/config/cache.yml" role="data" />
+   <file baseinstalldir="/" md5sum="9cbbf2a71ebac31c5e9df7c44c2e0dec" name="apps/pc_frontend/modules/ranking/config/security.yml" role="data" />
+   <file baseinstalldir="/" md5sum="4f9e6d1cfbdfeb8c5d9d3d2ce7b3dba3" name="apps/pc_frontend/modules/ranking/config/view.yml" role="data" />
+   <file baseinstalldir="/" md5sum="79cb6d887fe36f32a6bf4c5112d2cf58" name="apps/pc_frontend/modules/ranking/templates/showSuccess.php" role="data" />
+   <file baseinstalldir="/" md5sum="299ac1038af55a0214eb159ea2515014" name="apps/pc_frontend/modules/ranking/templates/_access.php" role="data" />
+   <file baseinstalldir="/" md5sum="18231cf99834d0a3f651de123959fb7d" name="apps/pc_frontend/modules/ranking/templates/_community.php" role="data" />
+   <file baseinstalldir="/" md5sum="c4816a50f46389c7c26c3d4514ef2836" name="apps/pc_frontend/modules/ranking/templates/_friend.php" role="data" />
+   <file baseinstalldir="/" md5sum="f26f1d9fea0a9022fc3840fa1fd2872e" name="apps/pc_frontend/modules/ranking/templates/_menu.php" role="data" />
+   <file baseinstalldir="/" md5sum="ee08f86eb33c451b8c734d754b595575" name="apps/pc_frontend/modules/ranking/templates/_topic.php" role="data" />
+   <file baseinstalldir="/" md5sum="44decc0ab305204b5314316883114a76" name="apps/pc_frontend/templates/_partsRankingResultList.php" role="data" />
+   <file baseinstalldir="/" md5sum="766525e8ac1cf5121e8b13e9c01cc530" name="config/app.yml" role="data" />
+   <file baseinstalldir="/" md5sum="bf7f3fc7d43575fb5695cbeb2e69bf7c" name="data/fixtures/navigation.yml" role="data" />
+   <file baseinstalldir="/" md5sum="a9024e8c3541d207b58ccf67a5d92d05" name="lib/opRankingPlugin.php" role="data" />
+   <file baseinstalldir="/" md5sum="c403d49f71a9588b906b7ad856021931" name="lib/action/opRankingPluginRankingActions.class.php" role="data" />
+   <file baseinstalldir="/" md5sum="d22379b1c44ca1dcdca0fdc8f54c4c22" name="lib/action/opRankingPluginRankingComponents.class.php" role="data" />
+   <file baseinstalldir="/" md5sum="f3d892c29dd62c0dc321474533b4f6d0" name="lib/routing/opRankingPluginFrontendRouteCollection.class.php" role="data" />
+   <file baseinstalldir="/" md5sum="8a585d7165b066c62d5d1c69d7877362" name="test/bootstrap/database.php" role="data" />
+   <file baseinstalldir="/" md5sum="652a0d72910be1a5786698aaf5b9b508" name="test/bootstrap/functional.php" role="data" />
+   <file baseinstalldir="/" md5sum="b6e69bd4c5958def80bc622b1e8d15b2" name="test/bootstrap/unit.php" role="data" />
+   <file baseinstalldir="/" md5sum="d156a66f3c6b107efe7c26692562fbc1" name="test/fixtures/001_member.yml" role="data" />
+   <file baseinstalldir="/" md5sum="2aee34e5460983ac340cde8b464d4bb0" name="test/fixtures/002_community.yml" role="data" />
+   <file baseinstalldir="/" md5sum="1f1ae25cee91e4b897e836932578e1f3" name="test/fixtures/003_ashiato.yml" role="data" />
+   <file baseinstalldir="/" md5sum="eb9d389b56456483fd8e1e2cdd3b02d9" name="test/fixtures/004_sns_config.yml" role="data" />
+   <file baseinstalldir="/" md5sum="56d02d1e5885c12322d22f005369eff3" name="test/functional/mobile_frontend/rankingActionsTest.php" role="data" />
+   <file baseinstalldir="/" md5sum="59fd22d7f2d809b3692946ea1fc6e049" name="test/functional/pc_frontend/rankingActionsTest.php" role="data" />
+   <file baseinstalldir="/" md5sum="c0165e5bbf65d7df8630c417ab65e11b" name="web/css/ranking.css" role="data" />
+  </dir>
+ </contents>
+ <dependencies>
+  <required>
+   <php>
+    <min>5.2.3</min>
+   </php>
+   <pearinstaller>
+    <min>1.4.0</min>
+   </pearinstaller>
+  </required>
+ </dependencies>
+ <phprelease />
+ <changelog>
+  <release>
+   <version>
+    <release>0.9.0</release>
+    <api>0.9.0</api>
+   </version>
+   <stability>
+    <release>beta</release>
+    <api>beta</api>
+   </stability>
+   <date>2009-06-03</date>
+   <license>apache</license>
+   <notes>
+This plugin is now compatible with Doctrine
+   </notes>
+  </release>
+  <release>
+   <version>
+    <release>1.0.0</release>
+    <api>1.0.0</api>
+   </version>
+   <stability>
+    <release>beta</release>
+    <api>beta</api>
+   </stability>
+   <date>2010-06-01</date>
+   <license>apache</license>
+   <notes>
+added cache table/routing roule, fixed bugs
+   </notes>
+  </release>
+  <release>
+   <version>
+    <release>1.0.0.1</release>
+    <api>1.0.0.1</api>
+   </version>
+   <stability>
+    <release>beta</release>
+    <api>beta</api>
+   </stability>
+   <date>2011-04-19</date>
+   <license>apache</license>
+   <notes>
+changed getting member&apos;s self introduction to consider profile.public_flag
+   </notes>
+  </release>
+  <release>
+   <version>
+    <release>1.0.1</release>
+    <api>1.0.1</api>
+   </version>
+   <stability>
+    <release>beta</release>
+    <api>beta</api>
+   </stability>
+   <date>2011-09-21</date>
+   <license>apache</license>
+   <notes>
+fix bugs
+   </notes>
+  </release>
+ </changelog>
+</package>

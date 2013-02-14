@@ -1,0 +1,15 @@
+profileSuccess:
+  customize:
+    introFriendList:
+      template: [introfriend, introFriendList]
+      parts: [profile]
+      is_component: true
+      target: [after] 
+
+homeSuccess:
+  customize:
+    noticeIntroFriendUnread:
+      template: [introfriend, noticeUnread]
+      is_component: true
+      parts:    [information]
+      target:   [bodyBottom]

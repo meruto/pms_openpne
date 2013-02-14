@@ -1,0 +1,144 @@
+Member:
+  member_1:
+    id: 1
+    name: "OpenPNE_1"
+    is_active: 1
+  member_2:
+    id: 2
+    name: "OpenPNE_2"
+    is_active: 1
+  member_3:
+    id: 3
+    name: "OpenPNE_3"
+    is_active: 1
+  member_html_1:
+    id: 1055
+    name: "<&\"'>Member.name ESCAPING HTML TEST DATA"
+    is_active: 1
+  member_html_2:
+    id: 1056
+    name: "<&\"'>Member.name ESCAPING HTML TEST DATA"
+    is_active: 1
+
+MemberConfig:
+  member_address_1:
+    name: "pc_address"
+    value: "sns@example.com"
+    Member: member_1
+  member_mobile_address_1:
+    name: "mobile_address"
+    value: "sns@example.com"
+    Member: member_1
+  member_password_1:
+    name: "password"
+    value: "<?php echo md5('password') ?>"
+    Member: member_1
+  member_html_address_1:
+    name: "pc_address"
+    value: "html@example.com"
+    Member: member_html_1
+  member_html_mobile_address_1:
+    name: "mobile_address"
+    value: "html@example.com"
+    Member: member_html_1
+  member_html_password_1:
+    name: "password"
+    value: "<?php echo md5('password') ?>"
+    Member: member_html_1
+
+MemberRelationship:
+  member_1_member_2:
+    Member: member_1
+    MemberRelatedByMemberIdFrom: member_2
+    is_friend: 1
+  member_2_member_1:
+    Member: member_2
+    MemberRelatedByMemberIdFrom: member_1
+    is_friend: 1
+  member_html_1_member_html_2:
+    Member: member_html_1
+    MemberRelatedByMemberIdFrom: member_html_2
+    is_friend: 1
+  member_html_2_member_html_1:
+    Member: member_html_2
+    MemberRelatedByMemberIdFrom: member_html_1
+    is_friend: 1
+
+File:
+  dummy_file_1:
+    name: "dummy_file"
+    type: "image/png"
+    original_filename: "dummy.png"
+    FileBin:
+      bin: ~
+
+Album:
+  album_1:
+    id: 1
+    Member: member_1
+    File: dummy_file_1
+    title: "Member1's-album1"
+    body: "This's member1's album"
+    public_flag: 1 #SNS
+  album_2:
+    id: 2
+    Member: member_1
+    title: "Member1's-album2"
+    body: "This's member1's album"
+    public_flag: 2 #FRIEND
+  album_3:
+    id: 3
+    Member: member_1
+    File: dummy_file_1
+    title: "Member1's-album3"
+    body: "This's member1's album"
+    public_flag: 3 #PRIVATE
+  album_4:
+    id: 4
+    Member: member_2
+    File: dummy_file_1
+    title: "Member2's-album1"
+    body: "This's member2's album"
+    public_flag: 1 #SNS
+  album_html_1:
+    id: 1055
+    Member: member_html_1
+    File: dummy_file_1
+    title: "<&\"'>Album.title ESCAPING HTML TEST DATA"
+    body: "<&\"'>Album.body ESCAPING HTML TEST DATA"
+  album_html_2:
+    id: 1056
+    Member: member_html_2
+    File: dummy_file_1
+    title: "<&\"'>Album.title ESCAPING HTML TEST DATA"
+    body: "<&\"'>Album.body ESCAPING HTML TEST DATA"
+
+AlbumImage:
+  album_image_1:
+    id: 1
+    Album: album_1
+    Member: member_1
+    File: dummy_file_1
+    description: "foo"
+    filesize: 1
+  album_image_2:
+    id: 2
+    Album: album_1
+    Member: member_1
+    File: dummy_file_1
+    description: "foo"
+    filesize: 1
+  album_image_3:
+    id: 3
+    Album: album_2
+    Member: member_1
+    File: dummy_file_1
+    description: "foo"
+    filesize: 1
+  album_image_html_1:
+    id: 1055
+    Album: album_html_1
+    Member: member_html_1
+    File: dummy_file_1
+    description: "<&\"'>AlbumImage.description ESCAPING HTML TEST DATA"
+    filesize: 1

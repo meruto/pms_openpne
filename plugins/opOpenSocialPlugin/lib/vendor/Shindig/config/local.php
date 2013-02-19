@@ -1,0 +1,72 @@
+<?php
+$webprefix = '';
+
+if ('test' === sfContext::getInstance()->getConfiguration()->getEnvironment())
+{
+  require dirname(__FILE__).'/test.php';
+
+  return;
+}
+
+if (sfContext::hasInstance())
+{
+  $webprefix = sfContext::getInstance()->getRequest()->getScriptName();
+}
+$shindigConfig = array(
+  'debug' => false,
+
+  'allow_plaintext_token' => false,
+
+  'render_token_required' => true,
+
+  'web_prefix' => $webprefix,
+  'default_js_prefix' => $webprefix.'/gadgets/js/',
+  'default_iframe_prefix' => $webprefix.'/gadgets/ifr?',
+
+  'allow_anonymous_token' => false,
+
+  'token_cipher_key' => Doctrine::getTable('SnsConfig')->get('shindig_token_cipher_key'),
+  'token_hmac_key'   => Doctrine::getTable('SnsConfig')->get('shindig_token_hmac_key'),
+  'token_max_age'    => Doctrine::getTable('SnsConfig')->get('shindig_token_max_age', 60*60),
+
+  'base_path'      => sfConfig::get('sf_plugins_dir').'/opOpenSocialPlugin/lib/vendor/Shindig/',
+  'features_path'  => array(
+    sfConfig::get('sf_plugins_dir').'/opOpenSocialPlugin/lib/vendor/Shindig/features/'
+  ),
+  'container_path' => sfConfig::get('sf_app_cache_dir').'/plugins/opOpenSocialPlugin',
+
+  'private_key_file'  => sfConfig::get('sf_plugins_dir').'/opOpenSocialPlugin/certs/private.key',
+  'public_key_file'   => sfConfig::get('sf_plugins_dir').'/opOpenSocialPlugin/certs/public.crt',
+  'private_key_phrase' => Doctrine::getTable('SnsConfig')->get('shindig_private_key_phrase', ""),
+
+  'remote_content'         => 'opShindigRemoteContent',
+  'remote_content_fetcher' => 'opShindigRemoteContentFetcher',
+  'security_token_signer'  => 'opShindigSecurityTokenDecoder',
+  'security_token'         => 'opShindigSecurityToken',
+  'oauth_lookup_service'   => 'opShindigOAuthLookupService',
+
+  'gadget_class' => 'Shindig_Gadget',
+
+  'data_cache'    => 'opShindigCacheStorageFile',
+  'feature_cache' => 'opShindigCacheStorageFile',
+
+  'person_service'     => 'opOpenSocialPersonService',
+  'activity_service'   => 'opOpenSocialActivityService',
+  'app_data_service'   => 'opOpenSocialAppDataService',
+  'messages_service'   => 'opOpenSocialMessagesService',
+  'album_service'      => 'opOpenSocialAlbumService',
+  'media_item_service' => 'opOpenSocialMediaItemService',
+
+  'invalidate_service' => 'opShindigInvalidateService',
+
+  'cache_time' => Doctrine::getTable('SnsConfig')->get('shindig_cache_time', 60*60),
+  'cache_root' => sfConfig::get('sf_cache_dir').'/plugins/opOpenSocialPlugin',
+
+  'curl_connection_timeout' => '15',
+);
+if (sfContext::hasInstance())
+{
+  $event = new sfEvent(null, 'op_opensocial.post_container_configuration');
+  sfContext::getInstance()->getEventDispatcher()->filter($event, $shindigConfig);
+  $shindigConfig = $event->getReturnValue();
+}

@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package packagerversion="1.9.0" version="2.0" xmlns="http://pear.php.net/dtd/package-2.0" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0
+    http://pear.php.net/dtd/tasks-1.0.xsd
+    http://pear.php.net/dtd/package-2.0
+    http://pear.php.net/dtd/package-2.0.xsd">
+ <name>opWebAPIPlugin</name>
+ <channel>plugins.openpne.jp</channel>
+ <summary>opWebAPIPlugin</summary>
+ <description>opWebAPIPlugin</description>
+ <lead>
+  <name>Kousuke Ebihara</name>
+  <user>ebihara</user>
+  <email />
+  <active>yes</active>
+ </lead>
+ <lead>
+  <name>Shingo Yamada</name>
+  <user>shingo</user>
+  <email />
+  <active>yes</active>
+ </lead>
+ <lead>
+  <name>Yuya Watanabe</name>
+  <user>watanabe</user>
+  <email />
+  <active>yes</active>
+ </lead>
+ <date>2011-09-22</date>
+ <time>16:58:37</time>
+ <version>
+  <release>0.5.1</release>
+  <api>0.5.1</api>
+ </version>
+ <stability>
+  <release>beta</release>
+  <api>beta</api>
+ </stability>
+ <license>apache</license>
+ <notes>
+Bug（バグ） #2233: max-resultsの値に整数以外の値を入力した際に全件表示されてしまう
+Bug（バグ） #2339: 部分一致検索を行う箇所でワイルドカード検索ができてしまう
+ </notes>
+ <contents>
+  <dir baseinstalldir="/" name="/">
+   <file baseinstalldir="/" md5sum="7142864d664dd1080467a65f1b6feedc" name="apps/api/modules/feeds/actions/actions.class.php" role="data" />
+   <file baseinstalldir="/" md5sum="34403b755c87c437b3bd5fccbd9cdf0b" name="apps/api/modules/feeds/config/filters.yml" role="data" />
+   <file baseinstalldir="/" md5sum="9825fc4647c91fc079ced0f3c17aca05" name="apps/api/modules/feeds/config/security.yml" role="data" />
+   <file baseinstalldir="/" md5sum="d41d8cd98f00b204e9800998ecf8427e" name="apps/api/modules/feeds/templates/indexSuccess.php" role="data" />
+   <file baseinstalldir="/" md5sum="c6fe16813b8d96dd19dd093aaeb2dbed" name="apps/pc_backend/modules/opWebAPIPlugin/actions/actions.class.php" role="data" />
+   <file baseinstalldir="/" md5sum="b73093099e684522b84eb88993daec8d" name="apps/pc_backend/modules/opWebAPIPlugin/lib/APIAllowIPConfigForm.class.php" role="data" />
+   <file baseinstalldir="/" md5sum="d80cb5f36c730484a87ebffe25815c14" name="apps/pc_backend/modules/opWebAPIPlugin/templates/indexSuccess.php" role="data" />
+   <file baseinstalldir="/" md5sum="eecb620c933dac7c9b4ab114bf0c5a63" name="config/routing.yml" role="data" />
+   <file baseinstalldir="/" md5sum="271b6871602b022a48278bd5ae94114c" name="data/fixtures/010_default_api_configuration.yml" role="data" />
+   <file baseinstalldir="/" md5sum="0784018e5c535778e61ef1462866dc2d" name="i18n/api.ja.xml" role="data" />
+   <file baseinstalldir="/" md5sum="97affd128c5aa37edc37b8f1bf1052dd" name="lib/opCheckAllowedAccessWebAPI.class.php" role="data" />
+   <file baseinstalldir="/" md5sum="7436260e21fcdcf61960f2386c1637c9" name="lib/opWebAPIRoute.class.php" role="data" />
+   <file baseinstalldir="/" md5sum="bc219e649eb1c169bb29a2eb150d66c2" name="lib/opWebAPIRouteCollection.class.php" role="data" />
+   <file baseinstalldir="/" md5sum="6a00e97005210ca5cdc0fc2af2131ba3" name="lib/api/opAPI.class.php" role="data" />
+   <file baseinstalldir="/" md5sum="61ee834cbf8ad2a8a0dfa7996af091e0" name="lib/api/opAPICommunity.class.php" role="data" />
+   <file baseinstalldir="/" md5sum="65b7bd9af454d596abd1013596ae1c8f" name="lib/api/opAPICommunityEvent.class.php" role="data" />
+   <file baseinstalldir="/" md5sum="90965a4b0c35adbc8835fa3f91437087" name="lib/api/opAPICommunityEventComment.class.php" role="data" />
+   <file baseinstalldir="/" md5sum="2949b2f993037cd82163ebf2a2362738" name="lib/api/opAPICommunityMember.class.php" role="data" />
+   <file baseinstalldir="/" md5sum="4380908364032e91c576df935a7f0d9a" name="lib/api/opAPICommunityTopic.class.php" role="data" />
+   <file baseinstalldir="/" md5sum="ff979765df517a80f0ab4b9390b5045e" name="lib/api/opAPICommunityTopicComment.class.php" role="data" />
+   <file baseinstalldir="/" md5sum="aad398ee60e474e2dbe44d9e32ba2984" name="lib/api/opAPIDiary.class.php" role="data" />
+   <file baseinstalldir="/" md5sum="a19cbef309a27f7b3094fdf0f7a9087d" name="lib/api/opAPIInterface.class.php" role="data" />
+   <file baseinstalldir="/" md5sum="26514798ea7b1dadddb6fcd4466f5b6d" name="lib/api/opAPIMember.class.php" role="data" />
+   <file baseinstalldir="/" md5sum="f89be121c332ad337756f6f481c72a54" name="lib/api/opAtomPubDocument.class.php" role="data" />
+   <file baseinstalldir="/" md5sum="b6683661f836e31adde3917b1d9eeece" name="lib/api/opAtomPubDocumentEntry.class.php" role="data" />
+   <file baseinstalldir="/" md5sum="04957894bc45dd466de20e23807665cf" name="lib/api/opAtomPubDocumentFeed.class.php" role="data" />
+   <file baseinstalldir="/" md5sum="409591cb335d8a945af442d8352335e1" name="lib/api/opGDataDocument.class.php" role="data" />
+   <file baseinstalldir="/" md5sum="9377b8be2e70a2fb0158dcb050b72393" name="lib/api/opGDataDocumentEntry.class.php" role="data" />
+   <file baseinstalldir="/" md5sum="b18819ce72a1f49495e65fd329590f5c" name="lib/api/opGDataDocumentFeed.class.php" role="data" />
+   <file baseinstalldir="/" md5sum="3b83ef96387f14655fc854ddc3c6bd57" name="LICENSE" role="data" />
+  </dir>
+ </contents>
+ <dependencies>
+  <required>
+   <php>
+    <min>5.2.3</min>
+   </php>
+   <pearinstaller>
+    <min>1.4.0</min>
+   </pearinstaller>
+  </required>
+ </dependencies>
+ <phprelease />
+ <changelog>
+  <release>
+   <version>
+    <release>0.3.0</release>
+    <api>0.3.0</api>
+   </version>
+   <stability>
+    <release>beta</release>
+    <api>beta</api>
+   </stability>
+   <date>2009-05-17</date>
+   <license>apache</license>
+   <notes>
+This plugin is now compatible with Doctrine, and this is starting compatible with GData now.
+   </notes>
+  </release>
+  <release>
+   <version>
+    <release>0.3.1</release>
+    <api>0.3.1</api>
+   </version>
+   <stability>
+    <release>beta</release>
+    <api>beta</api>
+   </stability>
+   <date>2009-06-17</date>
+   <license>apache</license>
+   <notes>
+added support for addtional GData futures
+   </notes>
+  </release>
+  <release>
+   <version>
+    <release>0.3.2</release>
+    <api>0.3.2</api>
+   </version>
+   <stability>
+    <release>beta</release>
+    <api>beta</api>
+   </stability>
+   <date>2009-06-19</date>
+   <license>apache</license>
+   <notes>
+Fixed some issues that are not following AtomPub protocol or GData protocol
+   </notes>
+  </release>
+  <release>
+   <version>
+    <release>0.3.3</release>
+    <api>0.3.3</api>
+   </version>
+   <stability>
+    <release>beta</release>
+    <api>beta</api>
+   </stability>
+   <date>2009-06-24</date>
+   <license>apache</license>
+   <notes>
+- changed the opAPI::getMemberIdByUrl() method for slipshod checking uri format
+- fixed that opAPI::getTotalCount() doesn&apos;t return a valid count
+   </notes>
+  </release>
+  <release>
+   <version>
+    <release>0.3.4</release>
+    <api>0.3.4</api>
+   </version>
+   <stability>
+    <release>beta</release>
+    <api>beta</api>
+   </stability>
+   <date>2009-06-26</date>
+   <license>apache</license>
+   <notes>
+fixed that the search request parameter doesn&apos;t handle double-quotation
+   </notes>
+  </release>
+  <release>
+   <version>
+    <release>0.3.6</release>
+    <api>0.3.6</api>
+   </version>
+   <stability>
+    <release>beta</release>
+    <api>beta</api>
+   </stability>
+   <date>2009-07-27</date>
+   <license>apache</license>
+   <notes>
+added support for coverting emojifor DoComO format
+   </notes>
+  </release>
+  <release>
+   <version>
+    <release>0.3.7</release>
+    <api>0.3.7</api>
+   </version>
+   <stability>
+    <release>beta</release>
+    <api>beta</api>
+   </stability>
+   <date>2009-09-03</date>
+   <license>apache</license>
+   <notes>
+Added ability to authorize by OAuth
+   </notes>
+  </release>
+  <release>
+   <version>
+    <release>0.3.8</release>
+    <api>0.3.8</api>
+   </version>
+   <stability>
+    <release>beta</release>
+    <api>beta</api>
+   </stability>
+   <date>2009-09-26</date>
+   <license>apache</license>
+   <notes>
+This plugin is now handling string type node correctly.
+   </notes>
+  </release>
+  <release>
+   <version>
+    <release>0.3.9</release>
+    <api>0.3.9</api>
+   </version>
+   <stability>
+    <release>beta</release>
+    <api>beta</api>
+   </stability>
+   <date>2009-12-12</date>
+   <license>apache</license>
+   <notes>
+fixed segfault and converting Emoji
+   </notes>
+  </release>
+  <release>
+   <version>
+    <release>0.4.0</release>
+    <api>0.4.0</api>
+   </version>
+   <stability>
+    <release>beta</release>
+    <api>beta</api>
+   </stability>
+   <date>2010-04-30</date>
+   <license>apache</license>
+   <notes>
+now compatible with symfony 1.4 (OpenPNE 3.4) and PHP 5.3 +
+   </notes>
+  </release>
+  <release>
+   <version>
+    <release>0.5.0</release>
+    <api>0.5.0</api>
+   </version>
+   <stability>
+    <release>beta</release>
+    <api>beta</api>
+   </stability>
+   <date>2011-06-17</date>
+   <license>apache</license>
+   <notes>
+fixed updated the diary feed to current the specifications(fixes #1070)
+   </notes>
+  </release>
+  <release>
+   <version>
+    <release>0.5.1</release>
+    <api>0.5.1</api>
+   </version>
+   <stability>
+    <release>beta</release>
+    <api>beta</api>
+   </stability>
+   <date>2011-09-22</date>
+   <license>apache</license>
+   <notes>
+Bug（バグ） #2233: max-resultsの値に整数以外の値を入力した際に全件表示されてしまう
+Bug（バグ） #2339: 部分一致検索を行う箇所でワイルドカード検索ができてしまう
+   </notes>
+  </release>
+ </changelog>
+</package>

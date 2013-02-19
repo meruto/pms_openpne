@@ -1,0 +1,17 @@
+enable_mobile:
+  Default: 0
+
+enable_pc:
+  Default: 1
+
+admin_invite:
+  Default:  false
+
+googleapps_domain:
+  Name:      "googleapps_domain"
+  Caption:   "GoogleApps hosted domain"
+  FormType:  "input"
+  ValueType: "text"
+  IsConfig:   true
+  IsRequired: false
+  Default:    ""

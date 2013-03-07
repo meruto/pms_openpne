@@ -34,6 +34,12 @@ jQuery(document).ready(function($) {
     $('#login-wraper').css('margin-left', '-430px');
     $('table').css('border-width', '1px 1px 1px 0');
   }
+
+  if (0 <= url.indexOf("register/token"))
+  {
+    $('#login-wraper').children().remove();
+    $('#login-wraper').append($('#Center'));
+  }
 });
 
 

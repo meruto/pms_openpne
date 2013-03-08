@@ -40,6 +40,21 @@ jQuery(document).ready(function($) {
     $('#login-wraper').children().remove();
     $('#login-wraper').append($('#Center'));
   }
+
+  if (0 <= url.indexOf("opAuthMailAddress/helpLoginError") || 0 <= url.indexOf("opAuthMailAddress/passwordRecovery"))
+  {
+    $('#login-wraper').children().remove();
+  }
+
+  if ($('.parts').text())
+  {
+    $('#login-wraper').prepend($('.parts'));
+    $('.parts td').css('color', 'red');
+  }
+
+  if(0 <= $('#Center').text().indexOf("このページにはアクセスできません。"))
+  {
+    $('#login-wraper').children().remove();
+    $('#login-wraper').append($('#Center'));
+  }
 });
-
-

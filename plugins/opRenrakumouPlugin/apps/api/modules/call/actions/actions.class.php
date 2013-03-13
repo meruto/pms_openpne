@@ -9,87 +9,106 @@
  */
 class callActions extends sfActions
 {
-
-  /**
-   * Executes index action
-   *
-   * @param sfWebRequest $request A request object
-   */
-  public function executeIndex(sfWebRequest $request)
+  public function executeCron(sfWebRequest $request)
   {
-    $this->forward('default', 'module');
+    if(1 != $this->getUser()->getMemberId()){
+      return $this->renderText(json_encode(array("status" => "error","message"=> "ACL required")));
+    }
+    $mode = $request->getParameter("mode");
+    switch($mode){
+      case "update":
+        RenrakumouUtil::updatestatus_tel();
+        break;
+      case "process":
+        RenrakumouUtil::process_tel();
+        RenrakumouUtil::process_mail();
+        break;
+      case "boundio":
+        RenrakumouUtil::sync_boundio();
+        break;
+      case "test":
+        break;
+      case "all":
+        RenrakumouUtil::process_tel();
+        RenrakumouUtil::process_mail();
+        RenrakumouUtil::sync_boundio();
+        RenrakumouUtil::updatestatus_tel();
+        break;
+    }
+    return $this->renderText(json_encode(array("status" => "success","message"=> "$mode mode DONE")));
   }
-
-  public function executeSearch(sfWebRequest $request)
-  {
-    $id = (int) $request->getParameter("id", null);
-    return $this->renderText($this->sheeturl2json($id));
-  }
-
   public function executeDemo(sfWebRequest $request)
   {
   	$tel = $request->getParameter("tel");
   	$body = $request->getParameter("body");
   	$body = str_replace(array("\r\n","\r","\n"), '', $body);
-		TejimayaBoundioUtil::pushcall($tel,$body);
-		//TejimayaBoundioUtil::pushcall("08040600334","あおｓんつはそにぇうｓなおへうあのえう");
-		return $this->renderText(json_encode(array("sutatus" => "success","tel" => $tel,"text" => $text)));
+		$result = RenrakumouUtil::pushcall($tel,$body,$_SERVER['userSerialId'],$_SERVER['appId'],$_SERVER['authKey']);
+    //FIXME クライアントのJS側に、エラーパターンを伝える、入力値がおかしいのか？文章が長すぎるのか？サーバがおかしいのか？
+		if($result){
+      return $this->renderText(json_encode(array("status" => "success","tel" => $tel,"body" => $body, "result" => $result)));
+    }else{
+      return $this->renderText(json_encode(array("status" => "error","message" => " error")));      
+    }
 	}
 
-  private function sheeturl2json($id = "1")
+  public function executeQueue(sfWebRequest $request)
   {
-    // Set your CSV feed
-    $feed = 'https://docs.google.com/spreadsheet/pub?key=0AkrtLQHh8XpBdDlFcFlvU3QzdUViTWlHZFFhZFkwTWc&single=true&gid='.$id.'&output=csv';
+    $community_id = $request->getParameter("community_id","");
+    $title = $request->getParameter("title");
+    $body = $request->getParameter("body");
 
-    // Arrays we'll use later
-    $keys = array();
-    $newArray = array();
+    $data = $request->getParameter("member_text");
 
+    //FIXME Validationしよう
+    $data = str_replace(array("\r\n","\r"), "\n", $data);
 
-    // Do it
-    $data = $this->csvToArray($feed, ',');
+    $status = array();
+    $status['title'] = $title;
+    $status['body'] = $body;
+    $status['date'] = date("Y/m/d");
+    $status['community_id'] = $community_id;
+    $status['status'] = "ACTIVE";
+    $status['status_list'] = array();
 
-    // Set number of elements (minus 1 because we shift off the first row)
-    $count = count($data) - 1;
-
-    //Use first row for names  
-    $labels = array_shift($data);
-
-    foreach ($labels as $label) {
-      $keys[] = $label;
+    if(!$data){
+      $this->logMessage('if(!$data)',"err");
+      //FIXME HTTP400で返すべきではあるが、、、
+      return $this->renderText(json_encode(array("status" => "error","message" => "parameter error")));
     }
+    $data_list =  explode("\n" , $data);
 
-    // Add Ids, just in case we want them later
-    $keys[] = 'id';
+    foreach($data_list as $line){
+      $single = array();
+      $line = str_replace(array("\t"," "), ' ', $line);
 
-    for ($i = 0; $i < $count; $i++) {
-      $data[$i][] = $i;
-    }
-
-    // Bring it all together
-    for ($j = 0; $j < $count; $j++) {
-      $d = array_combine($keys, $data[$j]);
-      $newArray[$j] = $d;
-    }
-
-    // Print it out as JSON
-    return json_encode($newArray);
-  }
-
-  function csvToArray($file, $delimiter)
-  {
-    if (($handle = fopen($file, 'r')) !== FALSE)
-    {
-      $i = 0;
-      while (($lineArray = fgetcsv($handle, 4000, $delimiter, '"')) !== FALSE) {
-        for ($j = 0; $j < count($lineArray); $j++) {
-          $arr[$i][$j] = $lineArray[$j];
-        }
-        $i++;
+      list($nickname,$tel,$mail) = explode(" ",$line);
+      if(!$nickname){
+        continue; //PASS EMPTY
       }
-      fclose($handle);
+      $single["boundio_id"] = "";
+      $single["nickname"] = $nickname;
+      $single["member_id"] = "";
+      $single["tel"] = $tel;
+      $single["telstat"] = "CALLWAITING";
+      $single["mail"] = $mail;
+      if($mail){
+        $single["mailstat"] = "CALLWAITING";
+      }else{
+        $single["mailstat"] = "UNSENT";        
+      }
+      $status['status_list'][] = $single;
     }
-    return $arr;
+    $public_pcall_status = json_decode(Doctrine::getTable('SnsConfig')->get('public_pcall_status'));
+    if(null == $public_pcall_status){
+      $public_pcall_status = array();
+    }
+    array_unshift($public_pcall_status,$status);
+    Doctrine::getTable('SnsConfig')->set('public_pcall_status', json_encode($public_pcall_status));
+    $result = true;
+    if($result){
+      return $this->renderText(json_encode(array("status" => "success","title" => $title,"body" => $body, "data" => $data, "result" => $result)));
+    }else{
+      return $this->renderText(json_encode(array("status" => "error","message" => " error")));      
+    }
   }
-
 }

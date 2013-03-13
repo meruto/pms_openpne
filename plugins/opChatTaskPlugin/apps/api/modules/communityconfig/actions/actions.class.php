@@ -5,7 +5,7 @@
  *
  * @package    OpenPNE
  * @subpackage memberconfig
- * @author     Your name here
+ * @author     Mamoru Tejima
  */
 class communityconfigActions extends opJsonApiActions
 {
@@ -16,26 +16,45 @@ class communityconfigActions extends opJsonApiActions
   */
   public function executeSearch(sfWebRequest $request)
   {
+    $_community = Doctrine::getTable("Community")->find($request['community_id']);
+    if(!$_community){
+      $ar = array("status" => "error" , "message" => "Community not found. community_id:" + $request["community_id"]);
+      return $this->renderText(json_encode($ar));
+    }
+    if(!$_community->isPrivilegeBelong($this->getUser()->getMemberId())){
+      $ar = array("status" => "error" , "message" => "Not community member. community_id:" + $request["community_id"]);
+      return $this->renderText(json_encode($ar));
+    }
+    if(!preg_match("/^public_/" ,$request['key'])){
+      $ar = array("status" => "error" , "message" => "Parameter must start with public_");
+      return $this->renderText(json_encode($ar));
+    }
+
     $value = Doctrine::getTable("CommunityConfig")->retrieveValueByNameAndCommunityId($request['key'],$request['community_id']);
     if($value) 
     {
       $ar = array("status"=>"success" , "data" => array( "community_id" => $request['community_id'] , "key" => $request['key'] , "value" => $value));
-      return $this->renderText(json_encode($ar));
     }else{
-
-      $q = new CommunityConfig();
-      $q->setName('memo');
-      $q->setValue('');
-      $q->setCommunityId($request['community_id']);   
-      $q->save();
       $ar = array("status"=>"success" , "data" => array( "community_id" => $request['community_id'] , "key" => $request['key'] , "value" => ''));
-
-      return $this->renderText(json_encode($ar));
     }
+    return $this->renderText(json_encode($ar));
   }
 
   public function executeUpdate(sfWebRequest $request)
   {
+    $_community = Doctrine::getTable("Community")->find($request['community_id']);
+    if(!$_community){
+      $ar = array("status" => "error" , "message" => "Community not found. community_id:" + $request["community_id"]);
+      return $this->renderText(json_encode($ar));
+    }
+    if(!$_community->isPrivilegeBelong($this->getUser()->getMemberId())){
+      $ar = array("status" => "error" , "message" => "Not community member. community_id:" + $request["community_id"]);
+      return $this->renderText(json_encode($ar));
+    }
+    if(!preg_match("/^public_/" ,$request['key'])){
+      $ar = array("status" => "error" , "message" => "Parameter must start with public_");
+      return $this->renderText(json_encode($ar));
+    }
 
     $res =     Doctrine_Query::create()
     ->update('CommunityConfig cc')
@@ -46,7 +65,12 @@ class communityconfigActions extends opJsonApiActions
     if($res){
       $result = array("status"=>"success" , "data" => array( "community_id" => $request['community_id'] , "key" => $request['key'] , "value" => $value));
     }else{
-      $result = array("status" => "error");      
+      $q = new CommunityConfig();
+      $q->setName($request['key']);
+      $q->setValue('');
+      $q->setCommunityId($request['community_id']);   
+      $q->save();
+      $result = array("status"=>"success" , "data" => array( "community_id" => $request['community_id'] , "key" => $request['key'] , "value" => ""));
     }
     return $this->renderText(json_encode($result));
   }

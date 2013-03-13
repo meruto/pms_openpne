@@ -20,13 +20,34 @@ body {
 #info-textarea{
   word-break: break-all;
   overflow-y: scroll;
-  height: 300px;
-  width: 224px;
+  height: 200px;
 }
 
 .main-window{
   margin-top: 0px;
   margin-bottom: 0px;
+}
+
+#chat-input {
+  height: 100px;
+  position: absolute;
+  bottom: 10px;
+}
+#chat-view {
+  min-height: 100px;
+  overflow: auto;
+}
+#task-view {
+  min-height: 100px;
+  overflow: auto;
+}
+
+#footer {
+  height: 20px;
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  background: #112233;
 }
 
 #accordion2 {

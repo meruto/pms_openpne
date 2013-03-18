@@ -46,7 +46,7 @@ var openpne = '.json_encode($jsonData).';
         <a class="brand" href="/pcall">緊急連絡サービス pCall</a>
         <ul class="nav pull-right">
           <li>
-            <a href="/">SNSへ戻る</a>
+            <a href="/logout">ログアウト</a>
           </li>
         </ul>
       </div>
@@ -86,7 +86,6 @@ var openpne = '.json_encode($jsonData).';
               <!-- Button to trigger modal -->
               <a href="#testcall-modal" role="button" class="btn btn-block" data-toggle="modal">自分宛にテスト発信</a>
               <a href="#docall-modal" role="button" class="btn btn-danger btn-block" data-toggle="modal">電話本番発信</a>
-              <a href="#docall-modal" role="button" class="btn btn-warning btn-block" data-toggle="modal">メールのみ本番発信</a>
             </fieldset>
           </form>
         </div>

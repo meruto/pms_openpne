@@ -1,0 +1,4 @@
+homepage:
+  url: /
+  param: { module: pcall, action: index }
+

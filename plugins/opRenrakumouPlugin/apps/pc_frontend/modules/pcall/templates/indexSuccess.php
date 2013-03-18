@@ -207,9 +207,9 @@ var openpne = '.json_encode($jsonData).';
               </thead>
               <tbody>
               {{each status_list}}
-                {{if 'CALLED'==telstat || 'PUSH1'==telstat || 'PUSH1'==mailstat }}
+                {{if 'PUSH1'==telstat || 'PUSH1'==mailstat }}
                 <tr class="success">
-                {{else 'CALLWAITING'==telstat || 'CALLPROCESSING'==telstat  }}
+                {{else 'CALLED'==telstat || 'CALLWAITING'==telstat || 'CALLPROCESSING'==telstat  }}
                 <tr class="warning">
                 {{else 'FAIL'==telstat || 'FAIL1'==telstat || 'FAIL2'==telstat || 'HUZAI'==telstat || 'HUZAI1'==telstat || 'HUZAI2'==telstat}}
                 <tr class="error">

@@ -41,7 +41,7 @@ class callActions extends sfActions
   {
   	$tel = $request->getParameter("tel");
   	$body = $request->getParameter("body");
-  	$body = str_replace(array("\r\n","\r","\n"), '', $body);
+    $body = str_replace(array("\r\n","\r","\n"," ","　"), '', $body);
 		$result = RenrakumouUtil::pushcall($tel,$body,$_SERVER['userSerialId'],$_SERVER['appId'],$_SERVER['authKey']);
     //FIXME クライアントのJS側に、エラーパターンを伝える、入力値がおかしいのか？文章が長すぎるのか？サーバがおかしいのか？
 		if($result){
@@ -56,6 +56,7 @@ class callActions extends sfActions
     $community_id = $request->getParameter("community_id","");
     $title = $request->getParameter("title");
     $body = $request->getParameter("body");
+    $body = str_replace(array("\r\n","\r","\n"," ","　"), '', $body);
 
     $data = $request->getParameter("member_text");
 

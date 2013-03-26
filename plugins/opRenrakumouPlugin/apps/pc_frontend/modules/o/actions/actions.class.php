@@ -1,11 +1,18 @@
 <?php
 
 /**
- * o actions.
+ * This file is part of the OpenPNE package.
+ * (c) OpenPNE Project (http://www.openpne.jp/)
  *
- * @package    OpenPNE
- * @subpackage o
- * @author     Your name here
+ * For the full copyright and license information, please view the LICENSE
+ * file and the NOTICE file that were distributed with this source code.
+ */
+
+/**
+ * oActions
+ *
+ * @package    opRenrakumouPlugin
+ * @author     Mamoru Tejima <tejima@tejimaya.com>
  */
 class oActions extends sfActions
 {
@@ -16,14 +23,18 @@ class oActions extends sfActions
   */
   public function executeRoger(sfWebRequest $request)
   {
-  	$mail_id = $request->getParameter("id","");
+    $mailId = $request->getParameter('id', '');
 
-  	if($mail_id){
-	  	$result = RenrakumouUtil::updatestatus_mail($mail_id);
-	  	sfContext::getInstance()->getLogger()->debug("RenrakumouUtil::updatestatus_mail(): $result");
-	    return $this->renderText("了解確認を送信者に報告しました。");
-  	}else{
-  		return $this->renderText("報告できませんでした。");
-  	}
+    if ($mailId)
+    {
+      $result = opRenrakumouUtil::updatestatusMail($mailId);
+      sfContext::getInstance()->getLogger()->debug('opRenrakumouUtil::updatestatusMail(): '.$result);
+
+      return $this->renderText('了解確認を送信者に報告しました。');
+    }
+    else
+    {
+      return $this->renderText('報告できませんでした。');
+    }
   }
 }

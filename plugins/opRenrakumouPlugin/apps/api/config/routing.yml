@@ -1,25 +1,20 @@
-call_call:
-  url: /call/call.json
-  param: { module: call, action: call, sf_format: json }
-  requirements: { sf_method: [post] }
-call_search:
-  url: /call/search.json
-  param: { module: call, action: search, sf_format: json }
-  requirements: { sf_method: [post] }
-call_demo:
-  url: /call/demo.json
-  param: { module: call, action: demo, sf_format: json }
-  requirements: { sf_method: [post] }
-call_reloadboundio:
-  url: /call/reloadboundio.json
-  param: { module: call, action: reloadboundio, sf_format: json }
+# 送信状況の取得
+call_status:
+  url: /call/status.json
+  param: { module: call, action: status, sf_format: json }
   requirements: { sf_method: [get] }
-call_queue:
-  url: /call/queue.json
-  param: { module: call, action: queue, sf_format: json }
+# 送信
+call_send:
+  url: /call/send.json
+  param: { module: call, action: send, sf_format: json }
   requirements: { sf_method: [post] }
-call_cron:
-  url: /call/cron.json
-  param: { module: call, action: cron, sf_format: json }
+# boundioの更新取得
+call_update:
+  url: /call/update.json
+  param: { module: call, action: update, sf_format: json }
+  requirements: { sf_method: [post] }
+# 送信件数の取得
+call_count:
+  url: /call/count.json
+  param: { module: call, action: count, sf_format: json }
   requirements: { sf_method: [get] }
-

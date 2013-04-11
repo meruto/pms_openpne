@@ -37,45 +37,46 @@ class opRenrakumouUtil
 
   static function syncBoundio()
   {
-    $boundioList = opRenrakumouUtil::statusList(300, sfConfig::get('op_userSerialId'), sfConfig::get('op_appId'), sfConfig::get('op_authKey'));
+    $boundioList = opRenrakumouUtil::statusList(100, sfConfig::get('op_userSerialId'), sfConfig::get('op_appId'), sfConfig::get('op_authKey'));
     if (!$boundioList)
     {
-      $this->logMessage('boundioList empty', 'err');
+      sfContext::getInstance()->getLogger()->err('boundioList empty', 'error');
 
       return false;
     }
 
-    $map = array();
     foreach ($boundioList as $line)
     {
-      $_status = '';
+      $status = '';
       if ('1' == (string)$line['_gather'])
       {
-        $_status = 'PUSH';
+        $status = 'PUSH';
       }
       else
       {
         switch ($line['_status'])
         {
           case '架電完了':
-            $_status = 'CALLED';
+            $status = 'CALLED';
             break;
           case '架電待機':
-            $_status = 'CALLPROCESSING';
+            $status = 'CALLPROCESSING';
             break;
           case '不在':
-            $_status = 'HUZAI';
+            $status = 'HUZAI';
             break;
           default :
-            $_status = 'FAIL';
+            $status = 'FAIL';
+            break;
         }
       }
+
       $renrakuMember = Doctrine::getTable('RenrakuMember')->findByBoundioId($line['_id']);
       foreach ($renrakuMember as $memberLine)
       {
-        if ('' !== $_status)
+        if ('' !== $status)
         {
-          $memberLine['tel_status'] = $_status;
+          $memberLine['tel_status'] = $status;
           Doctrine::getTable('RenrakuMember')->updateStatus($memberLine);
         }
       }
@@ -133,8 +134,8 @@ class opRenrakumouUtil
     Boundio::configure('authKey', $authKey);
     Boundio::configure('env', sfConfig::get('op_boundioMode'));
 
-    $result = Boundio::status(null, date('Ymd', strtotime('-2 days')), date('Ymd', strtotime('-1 days')), $num);
-    sfContext::getInstance()->getLogger()->debug('Boundio::call() :'.print_r($result, true));
+    $result = Boundio::status(null, date('Ymd', strtotime('-2 days')), date('Ymd', strtotime('+1 days')), $num);
+    sfContext::getInstance()->getLogger()->debug('Boundio::status() :'.print_r($result, true));
 
     if (true == $result[0]['success'])
     {
@@ -212,7 +213,12 @@ EOF;
     }
     catch (Exception $e)
     {
+      sfContext::getInstance()->getLogger()->err('failed to send mail', 'error');
       return false;
     }
+  }
+
+  static function isValidMail($mailaddress) {
+      return preg_match('/^([a-zA-Z0-9])+([a-zA-Z0-9\._-])*@([a-zA-Z0-9_-])+([a-zA-Z0-9\._-]+)+$/', $mailaddress);
   }
 }

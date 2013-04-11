@@ -30,7 +30,6 @@ var openpne = '.$json.';
 <?php use_javascript('/opRenrakumouPlugin/js/pcall.js') ?>
 <?php include_javascripts() ?>
 <?php echo $op_config->get('pc_html_head') ?>
-<?php include_partial('icons') ?>
 </head>
 <body>
 <?php include_partial('pcallheader') ?>
@@ -102,7 +101,8 @@ var openpne = '.$json.';
       <label>連絡本文</label>
       <textarea id="doCallBody" data-placement="right" title="200文字以内で、伝えたい要件を記入してください。" class="input-block-level tooltip-target" rows="5" disabled></textarea>
       <div class="alert alert-error">
-        <strong>注意！</strong>発信ボタン押すと、実際に電話（メール）が発信されます。必ずテスト発信で確認をしてから。宛先、本文は十分確認の上、実行してください。
+        <strong>注意！</strong>発信ボタン押すと、実際に電話（メール）が発信されます。必ずテスト発信で確認をしてから。宛先、本文は十分確認の上、実行してください。<br />
+        ※電話1発信につき2秒ほどかかります。発信ボタンを押してから応答があるまでしばらくお待ち下さい。
       </div>
     </div>
     <div class="modal-footer">
@@ -186,8 +186,8 @@ var openpne = '.$json.';
               </tbody>
             </table>
             <p>
-              <a id="recreateError" style="margin-bottom: 10px;" data-index="${$index}" class="duplicate-link btn btn-small pull-right">送信できなかった送信先宛にもう一度作成する</a>
-              <a id="recreateAll" style="margin-bottom: 10px;" data-index="${$index}" class="duplicate-link btn btn-small pull-right">同じ内容でもう一度作成する</a>
+              <a style="margin-bottom: 10px;" data-index="${$index}" class="recreateError duplicate-link btn btn-small pull-right">送信できなかった送信先宛にもう一度作成する</a>
+              <a style="margin-bottom: 10px;" data-index="${$index}" class="recreateAll duplicate-link btn btn-small pull-right">同じ内容でもう一度作成する</a>
             </p>
           </div>
         </div>

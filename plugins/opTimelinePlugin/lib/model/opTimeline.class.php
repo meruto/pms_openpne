@@ -1,32 +1,47 @@
 <?php
 
+/**
+ * This file is part of the OpenPNE package.
+ * (c) OpenPNE Project (http://www.openpne.jp/)
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file and the NOTICE file that were distributed with this source code.
+ */
+
+/**
+ * opTimeline
+ *
+ * @package    OpenPNE
+ * @subpackage opTimelinePlugin
+ */
+
 class opTimeline
 {
 
   /**
    * @var opTimelineUser
    */
-  private $_user;
+  private $user;
 
-  private $_imageContentSize;
-  private $_baseUrl;
+  private $imageContentSize;
+  private $baseUrl;
 
 
   public function __construct(opTimelineUser $user, array $params)
   {
-    $this->_user = $user;
+    $this->user = $user;
 
-    $this->_imageContentSize = $params['image_size'];
-    $this->_baseUrl = $params['base_url'];
+    $this->imageContentSize = $params['image_size'];
+    $this->baseUrl = $params['base_url'];
   }
 
   const COMMENT_DISPLAY_MAX = 10;
   const MINIMUM_IMAGE_WIDTH = 285;
 
-  public function addPublicFlagByActivityDatasForSearchAPIByActivityDatas(array $responseDatas, $activityDatas)
+  public function addPublicFlagByActivityDataForSearchAPIByActivityData(array $responseDataList, $activityDataList)
   {
     $publicFlags = array();
-    foreach ($activityDatas as $activity)
+    foreach ($activityDataList as $activity)
     {
       $publicFlags[$activity->getId()] = $activity->getPublicFlag();
     }
@@ -38,23 +53,23 @@ class opTimeline
         ActivityDataTable::PUBLIC_FLAG_PRIVATE => 'private'
     );
 
-    foreach ($responseDatas as &$data)
+    foreach ($responseDataList as &$data)
     {
       $publicFlag = $publicFlags[$data['id']];
       $data['public_status'] = $publicStatusTextList[$publicFlag];
     }
     unset($data);
 
-    return $responseDatas;
+    return $responseDataList;
   }
 
   /**
    * メソッドを実行する前にopJsonApiをロードしておく必要がある
    */
-  public function createActivityDatasByActivityDataAndViewerMemberIdForSearchAPI($activityDatas, $viewerMemberId)
+  public function createActivityDataByActivityDataAndViewerMemberIdForSearchAPI($activityDataList, $viewerMemberId)
   {
     $activityIds = array();
-    foreach ($activityDatas as $activity)
+    foreach ($activityDataList as $activity)
     {
       $activityIds[] = $activity->getId();
     }
@@ -64,38 +79,39 @@ class opTimeline
       return array();
     }
 
-    $replayActivityDatas = $this->findReplayActivityDatasByActivityIdsGroupByActivityId($activityIds);
+    $replyActivityDataList = $this->findReplyActivityDataByActivityIdsGroupByActivityId($activityIds);
 
-    $memberIds = $this->_extractionMemberIdByActivitieyDatasAndReplayActivityDataRows(
-                    $activityDatas, $replayActivityDatas);
-    $memberDatas = $this->_user->createMemberDatasByViewerMemberIdAndMemberIdsForAPIResponse($viewerMemberId, $memberIds);
+    $memberIds = $this->extractionMemberIdByActivityDataAndReplyActivityDataRows(
+                    $activityDataList, $replyActivityDataList);
+    $memberDataList = $this->user->createMemberDataByViewerMemberIdAndMemberIdsForAPIResponse($viewerMemberId, $memberIds);
 
-    $responseDatas = $this->_createActivityDatasByActivityDatasAndMemberDatasForSearchAPI($activityDatas, $memberDatas);
+    $responseDataList = $this->createActivityDataByActivityDataAndMemberDataForSearchAPI($activityDataList, $memberDataList);
 
-    foreach ($responseDatas as &$response)
+    foreach ($responseDataList as &$response)
     {
       $id = $response['id'];
 
-      if (isset($replayActivityDatas[$id]))
+      if (isset($replyActivityDataList[$id]))
       {
-        $replaies = $replayActivityDatas[$id];
+        $replies = $replyActivityDataList[$id];
 
-        $response['replies'] = $this->_createActivityDatasByActivityDataRowsAndMemberDatasForSearchAPI($replaies['data'], $memberDatas);
-        $response['replies_count'] = $replaies['count'];
+        $response['replies'] = $this->createActivityDataByActivityDataRowsAndMemberDataForSearchAPI($replies['data'], $memberDataList);
+        $response['replies_count'] = $replies['count'];
       }
       else
       {
         $response['replies'] = null;
         $response['replies_count'] = 0;
       }
+      $response['body'] = htmlspecialchars($response['body'], ENT_QUOTES, 'UTF-8', false);
       $response['body_html'] = htmlspecialchars($response['body_html'], ENT_QUOTES, 'UTF-8', false);
     }
     unset($response);
 
-    return $responseDatas;
+    return $responseDataList;
   }
 
-  private function _extractionMemberIdByActivitieyDatasAndReplayActivityDataRows($activities, $replayActivitiyRows)
+  private function extractionMemberIdByActivityDataAndReplyActivityDataRows($activities, $replyActivitiyRows)
   {
     $memberIds = array();
     foreach ($activities as $activity)
@@ -103,9 +119,9 @@ class opTimeline
       $memberIds[] = $activity->getMemberId();
     }
 
-    foreach ($replayActivitiyRows as $activityDatas)
+    foreach ($replyActivitiyRows as $activityDataList)
     {
-      foreach ($activityDatas['data'] as $activityData)
+      foreach ($activityDataList['data'] as $activityData)
       {
         $memberIds[] = $activityData['member_id'];
       }
@@ -116,18 +132,18 @@ class opTimeline
     return $memberIds;
   }
 
-  private function _createActivityDatasByActivityDatasAndMemberDatasForSearchAPI($activityDatas, $memberDatas)
+  private function createActivityDataByActivityDataAndMemberDataForSearchAPI($activityDataList, $memberData)
   {
     $activityIds = array();
-    foreach ($activityDatas as $activity)
+    foreach ($activityDataList as $activity)
     {
       $activityIds[] = $activity->getId();
     }
 
     $activityImageUrls = $this->findActivityImageUrlsByActivityIds($activityIds);
 
-    $responseDatas = array();
-    foreach ($activityDatas as $activity)
+    $responseDataList = array();
+    foreach ($activityDataList as $activity)
     {
       if (isset($activityImageUrls[$activity->getId()]))
       {
@@ -141,13 +157,13 @@ class opTimeline
         $activityImageUrl = null;
       }
 
-      $imageUrls = $this->_getImageUrlInfoByImageUrl($activityImageUrl);
+      $imageUrls = $this->getImageUrlInfoByImageUrl($activityImageUrl);
 
       $responseData['id'] = $activity->getId();
-      $responseData['member'] = $memberDatas[$activity->getMemberId()];
+      $responseData['member'] = $memberData[$activity->getMemberId()];
 
-      $responseData['body'] = $activity->getBody();
-      $responseData['body_html'] = op_activity_linkification(nl2br(op_api_force_escape($activity->getBody())));
+      $responseData['body'] = preg_replace('/<br\s\/>/', '&lt;br&nbsp;/&gt;', $activity->getBody());
+      $responseData['body_html'] = op_activity_linkification(nl2br(op_api_force_escape($responseData['body'])));
       $responseData['uri'] = $activity->getUri();
       $responseData['source'] = $activity->getSource();
       $responseData['source_uri'] = $activity->getSourceUri();
@@ -156,29 +172,29 @@ class opTimeline
       $responseData['image_large_url'] = $imageUrls['large'];
       $responseData['created_at'] = date('r', strtotime($activity->getCreatedAt()));
 
-      $responseDatas[] = $responseData;
+      $responseDataList[] = $responseData;
     }
 
-    return $responseDatas;
+    return $responseDataList;
   }
 
-  private function _getImageUrlInfoByImageUrl($imageUrl)
+  private function getImageUrlInfoByImageUrl($imageUrl)
   {
-    if ($imageUrl === null)
+    if (is_null($imageUrl))
     {
       return array(
-          'large' => null,
-          'small' => null,
+        'large' => null,
+        'small' => null,
       );
     }
 
-    $imagePath = $this->_convertImageUrlToImagePath($imageUrl);
+    $imagePath = $this->convertImageUrlToImagePath($imageUrl);
 
     if (!file_exists($imagePath))
     {
       return array(
-          'large' => opTimelineImage::getNotImageUrl(),
-          'small' => opTimelineImage::getNotImageUrl(),
+        'large' => opTimelineImage::getNotImageUrl(),
+        'small' => opTimelineImage::getNotImageUrl(),
       );
     }
 
@@ -189,38 +205,38 @@ class opTimeline
     if (!file_exists($minimumImagePath))
     {
       return array(
-          'large' => $imageUrl,
-          'small' => $imageUrl,
+        'large' => $imageUrl,
+        'small' => $imageUrl,
       );
     }
 
-    $minimumImageUrl = str_replace(sfConfig::get('sf_web_dir'), $this->_baseUrl, $minimumImagePath);
+    $minimumImageUrl = str_replace(sfConfig::get('sf_web_dir'), $this->baseUrl, $minimumImagePath);
 
     return array(
-        'large' => $imageUrl,
-        'small' => $minimumImageUrl,
+      'large' => $imageUrl,
+      'small' => $minimumImageUrl,
     );
   }
 
-  private function _convertImageUrlToImagePath($imageUrl)
+  private function convertImageUrlToImagePath($imageUrl)
   {
     $match = array();
-    preg_match("/(http:\/\/.*)(\/cache)/", $imageUrl, $match);
+    preg_match("/(https?:\/\/.*)(\/cache)/", $imageUrl, $match);
 
     return str_replace($match[1], sfConfig::get('sf_web_dir'), $imageUrl);
   }
 
-  private function _createActivityDatasByActivityDataRowsAndMemberDatasForSearchAPI($activityDataRows, $memberDatas)
+  private function createActivityDataByActivityDataRowsAndMemberDataForSearchAPI($activityDataRows, $memberDataList)
   {
 
-    $responseDatas = array();
+    $responseDataList = array();
     foreach ($activityDataRows as $row)
     {
       $responseData['id'] = $row['id'];
-      $responseData['member'] = $memberDatas[$row['member_id']];
+      $responseData['member'] = $memberDataList[$row['member_id']];
 
-      $responseData['body'] = $row['body'];
-      $responseData['body_html'] = op_activity_linkification(nl2br(op_api_force_escape($row['body'])));
+      $responseData['body'] = htmlspecialchars($row['body'], ENT_QUOTES, 'UTF-8', false);
+      $responseData['body_html'] = op_activity_linkification(nl2br(htmlspecialchars($row['body'], ENT_QUOTES, 'UTF-8', false)));
       $responseData['uri'] = $row['uri'];
       $responseData['source'] = $row['source'];
       $responseData['source_uri'] = $row['source_uri'];
@@ -230,22 +246,20 @@ class opTimeline
       $responseData['image_large_url'] = null;
       $responseData['created_at'] = date('r', strtotime($row['created_at']));
 
-      $responseDatas[] = $responseData;
+      $responseDataList[] = $responseData;
     }
 
-    return $responseDatas;
+    return $responseDataList;
   }
 
-  public function findReplayActivityDatasByActivityIdsGroupByActivityId(array $activityIds)
+  public function findReplyActivityDataByActivityIdsGroupByActivityId(array $activityIds)
   {
     static $queryCacheHash;
-
-    $q = Doctrine_Query::create();
 
     if (!$queryCacheHash)
     {
       $q = Doctrine_Query::create();
-      $q->from('ActivityData ad');
+      $q->from('ActivityData');
       $q->whereIn('in_reply_to_activity_id', $activityIds);
       $q->orderBy('in_reply_to_activity_id, created_at DESC');
       $searchResult = $q->fetchArray();
@@ -258,55 +272,55 @@ class opTimeline
       $searchResult = $q->fetchArray();
     }
 
-    $replaies = array();
+    $replies = array();
     foreach ($searchResult as $row)
     {
       $targetId = $row['in_reply_to_activity_id'];
 
-      if (!isset($replaies[$targetId]['data']) || count($replaies[$targetId]['data']) < self::COMMENT_DISPLAY_MAX)
+      if (!isset($replies[$targetId]['data']) || count($replies[$targetId]['data']) < self::COMMENT_DISPLAY_MAX)
       {
-        $replaies[$targetId]['data'][] = $row;
+        $replies[$targetId]['data'][] = $row;
       }
 
-      if (isset($replaies[$targetId]['count']))
+      if (isset($replies[$targetId]['count']))
       {
-        $replaies[$targetId]['count']++;
+        $replies[$targetId]['count']++;
       }
       else
       {
-        $replaies[$targetId]['count'] = 1;
+        $replies[$targetId]['count'] = 1;
       }
     }
 
-    return $replaies;
+    return $replies;
   }
 
-  public function searchActivityDatasByAPIRequestDatasAndMemberId($requestDatas, $memberId)
+  public function searchActivityDataByAPIRequestDataAndMemberId($requestDataList, $memberId)
   {
     $builder = opActivityQueryBuilder::create()
                     ->setViewerId($memberId);
 
-    if (isset($requestDatas['target']))
+    if (isset($requestDataList['target']))
     {
-      if ('friend' === $requestDatas['target'])
+      if ('friend' === $requestDataList['target'])
       {
-        $builder->includeFriends($requestDatas['target_id'] ? $requestDatas['target_id'] : null);
+        $builder->includeFriends($requestDataList['target_id'] ? $requestDataList['target_id'] : null);
       }
 
-      if ('community' === $requestDatas['target'])
+      if ('community' === $requestDataList['target'])
       {
         $builder
                 ->includeSelf()
                 ->includeFriends()
                 ->includeSns()
-                ->setCommunityId($requestDatas['target_id']);
+                ->setCommunityId($requestDataList['target_id']);
       }
     }
     else
     {
-      if (isset($requestDatas['member_id']))
+      if (isset($requestDataList['member_id']))
       {
-        $builder->includeMember($requestDatas['member_id']);
+        $builder->includeMember($requestDataList['member_id']);
       }
       else
       {
@@ -319,34 +333,34 @@ class opTimeline
 
     $query = $builder->buildQuery();
 
-    if (isset($requestDatas['keyword']))
+    if (isset($requestDataList['keyword']))
     {
-      $query->andWhereLike('body', $requestDatas['keyword']);
+      $query->andWhereLike('body', $requestDataList['keyword']);
     }
 
     $globalAPILimit = sfConfig::get('op_json_api_limit', 20);
-    if (isset($requestDatas['count']) && (int) $requestDatas['count'] < $globalAPILimit)
+    if (isset($requestDataList['count']) && (int) $requestDataList['count'] < $globalAPILimit)
     {
-      $query->limit($requestDatas['count']);
+      $query->limit($requestDataList['count']);
     }
     else
     {
       $query->limit($globalAPILimit);
     }
 
-    if (isset($requestDatas['max_id']))
+    if (isset($requestDataList['max_id']))
     {
-      $query->addWhere('id <= ?', $requestDatas['max_id']);
+      $query->addWhere('id <= ?', $requestDataList['max_id']);
     }
 
-    if (isset($requestDatas['since_id']))
+    if (isset($requestDataList['since_id']))
     {
-      $query->addWhere('id > ?', $requestDatas['since_id']);
+      $query->addWhere('id > ?', $requestDataList['since_id']);
     }
 
-    if (isset($requestDatas['activity_id']))
+    if (isset($requestDataList['activity_id']))
     {
-      $query->addWhere('id = ?', $requestDatas['activity_id']);
+      $query->addWhere('id = ?', $requestDataList['activity_id']);
     }
 
     $query->andWhere('in_reply_to_activity_id IS NULL');
@@ -372,14 +386,14 @@ class opTimeline
     return $imageUrls;
   }
 
-  public function embedImageUrlToContentForSearchAPI(array $responseDatas)
+  public function embedImageUrlToContentForSearchAPI(array $responseDataList)
   {
     $imageUrls = array();
-    foreach ($responseDatas as $row)
+    foreach ($responseDataList as $row)
     {
-      if ($row['image_url'] !== null)
+      if (!is_null($row['image_url']))
       {
-        if ($this->_imageContentSize === 'large')
+        if ('large' === $this->imageContentSize)
         {
           $imageUrls[$row['id']] = $row['image_large_url'];
         }
@@ -387,11 +401,10 @@ class opTimeline
         {
           $imageUrls[$row['id']] = $row['image_url'];
         }
-        
       }
     }
 
-    foreach ($responseDatas as &$data)
+    foreach ($responseDataList as &$data)
     {
       $id = $data['id'];
 
@@ -401,9 +414,8 @@ class opTimeline
         $data['body_html'] = $data['body_html'].'<a href="'.$imageUrls[$id].'" rel="lightbox"><div><img src="'.$imageUrls[$id].'"></div></a>';
       }
     }
-    unset($data);
 
-    return $responseDatas;
+    return $responseDataList;
   }
 
   public function createPostActivityFromAPIByApiDataAndMemberId($apiData, $memberId)
@@ -442,16 +454,19 @@ class opTimeline
     return Doctrine::getTable('ActivityData')->updateActivity($memberId, $body, $options);
   }
 
-  /**
-   *
-   */
   public function createActivityImageByFileInfoAndActivityId(array $fileInfo, $activityId)
   {
     $file = new File();
     $file->setOriginalFilename(basename($fileInfo['name']));
     $file->setType($fileInfo['type']);
 
-    $fileBaseName = md5(time()).'_'.$file->getImageFormat();
+    $fileFormat = $file->getImageFormat();
+    if (is_null($fileFormat) || '' == $fileFormat)
+    {
+      $fileFormat = pathinfo($fileInfo['name'], PATHINFO_EXTENSION);
+    }
+
+    $fileBaseName = md5(time()).'_'.$fileFormat;
     $filename = 'ac_'.$fileInfo['member_id'].'_'.$fileBaseName;
 
     $file->setName($filename);
@@ -464,16 +479,16 @@ class opTimeline
     $activityImage = new ActivityImage();
     $activityImage->setActivityDataId($activityId);
     $activityImage->setFileId($file->getId());
-    $activityImage->setUri($this->_getActivityImageUriByfileInfoAndFilename($fileInfo, $filename));
+    $activityImage->setUri($this->getActivityImageUriByfileInfoAndFilename($fileInfo, $filename));
     $activityImage->setMimeType($file->type);
     $activityImage->save();
 
-    $this->_createUploadImageFileByFileInfoAndSaveFileName($fileInfo, $filename);
+    $this->createUploadImageFileByFileInfoAndSaveFileName($fileInfo, $filename);
 
     return $activityImage;
   }
 
-  private function _getActivityImageUriByfileInfoAndFilename($fileInfo, $filename)
+  private function getActivityImageUriByfileInfoAndFilename($fileInfo, $filename)
   {
     //ファイルテーブルの名前だと拡張式がついていない
     $filename = opTimelineImage::addExtensionToBasenameForFileTable($filename);
@@ -483,7 +498,7 @@ class opTimeline
     return $fileInfo['web_base_path'].$uploadBasePath.'/'.$filename;
   }
 
-  private function _createUploadImageFileByFileInfoAndSaveFileName($fileInfo, $filename)
+  private function createUploadImageFileByFileInfoAndSaveFileName($fileInfo, $filename)
   {
     $filename = opTimelineImage::addExtensionToBasenameForFileTable($filename);
     $uploadDirPath = opTimelineImage::findUploadDirPath($fileInfo['name']);
@@ -510,7 +525,7 @@ class opTimeline
     opTimelineImage::createMinimumImageByWidthSizeAndPaths(self::MINIMUM_IMAGE_WIDTH, $paths);
   }
 
-  public function getViewPhoto()
+  public static function getViewPhoto()
   {
     $viewPhoto = Doctrine::getTable('SnsConfig')->get('op_timeline_plugin_view_photo', false);
     if (false !== $viewPhoto)
@@ -519,5 +534,4 @@ class opTimeline
     }
     return 1;
   }
-
 }

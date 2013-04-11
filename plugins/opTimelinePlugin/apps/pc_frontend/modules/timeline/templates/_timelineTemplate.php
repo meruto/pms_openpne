@@ -9,35 +9,18 @@
               <a class="screen-name" href="${member.profile_url}">${member.screen_name}</a>
             </div>
             <div class="timeline-post-body" id="timeline-post-body-${id}">
-              {{html body_html}} 
+              {{html body_html}}
             </div>
             <div class="timeline-post-control">
               {{if public_status == 'friend' }}
-              <span class="public-flag">公開範囲:マイフレンドまで公開</span>
+              <span class="public-flag">公開範囲:<?php echo $op_term['my_friend'] ?>まで公開</span>
               {{else public_status == 'private' }}
               <span class="public-flag">公開範囲:公開しない</span>
               {{/if}}
             </div>
             <div class="timeline-post-control">
-            <a class="timeline-comment-link">コメントする</a>
-            {{if member.self==true}} | 
-            <a href="#timeline-post-delete-confirm-${id}" class="timeline-post-delete-confirm-link">削除する</a>
-            {{/if}} | 
-            <a href="<?php echo url_for('@homepage', array('absolute' => true)) ?>timeline/show/id/${id}">
-            <span class="timestamp timeago" title="${created_at}"></span>
-            </a>
-            </div>
-            <!--Like Plugin -->
-            <div class="like" style="display: none;">
-              <span class="like-wrapper" data-like-id="${id}" data-like-target="A" member-id="${member.id}">
-                <span class="like-post">いいね！</span>
-                <span class="like-cancel">いいね！を取り消す&nbsp;</span>
-                <span class="like-you">あなたが「いいね！」と言っています。</span><div></div>
-                  <a class="like-list" href="#likeModal" data-toggle="modal"></a>
-                <div class="like-list-member"></div>
-                <span class="like-friend-list"></span>
-              </span>
-            </div>
+            <a class="timeline-comment-link">コメントする</a>{{if member.self==true}} | <a href="#timeline-post-delete-confirm-${id}" class="timeline-post-delete-confirm-link">削除する</a>
+            {{/if}} | <a href="<?php echo url_for('@homepage', array('absolute' => true)) ?>timeline/show/id/${id}"><span class="timestamp timeago" title="${created_at}"></span></a>
 
             <a>
               <div id="timeline-comment-loadmore-${id}" data-timeline-id="${id}" class="timeline-comment-loadmore">
@@ -89,6 +72,7 @@
           </div>
           {{/if}}
         </div>
+      </div>
 </script>
 
 <script id="timelineCommentTemplate" type="text/x-jquery-tmpl">
@@ -103,6 +87,7 @@
                 {{html body_html}}
                 </span>
                 </div>
+
                 <div class="timeline-post-comment-control">
                 {{if member.self==true }}
                 <a href="#timeline-post-delete-confirm-${id}" class="timeline-post-delete-confirm-link">削除する</a> | 
@@ -133,16 +118,4 @@
               </div>
               {{/if}}
             </div>
-            <!--Like Plugin -->
-            <div class="like" style="display: none;">
-              <span class="like-wrapper font-small" data-like-id="${id}" data-like-target="A" member-id="${member.id}">
-                <span class="like-post">いいね！</span>
-                <span class="like-cancel">いいね！を取り消す&nbsp;</span>
-                <span class="like-you">あなたが「いいね！」と言っています。</span><div></div>
-                  <a class="like-list" href="#likeModal" data-toggle="modal"></a>
-                <div class="like-list-member"></div>
-                <span class="like-friend-list"></span>
-              </span>
-            </div>
 </script>
-

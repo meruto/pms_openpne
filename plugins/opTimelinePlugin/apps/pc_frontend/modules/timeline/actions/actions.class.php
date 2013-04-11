@@ -12,9 +12,8 @@
  * timeline actions.
  *
  * @package    OpenPNE
- * @subpackage timeline
+ * @subpackage opTimelinePlugin
  * @author     Shouta Kashiwagi <kashiwagi@tejimaya.com>
- * @version    SVN: $Id: actions.class.php 9301 2008-05-27 01:08:46Z dwhittle $
  */
 
 class timelineActions extends sfActions
@@ -23,22 +22,16 @@ class timelineActions extends sfActions
   {
     $this->forwardIf($request->isSmartphone(), 'timeline', 'smtMember');
 
-    $this->memberId = $request->getParameter('id', $this->getUser()->getMember()->getId());
-
     return sfView::SUCCESS;
   }
 
   public function executeCommunity(opWebRequest $request)
   {
+    $communityId = $request->getParameter('id');
+    $community = Doctrine::getTable('Community')->find($communityId);
+    $this->forward404Unless($community, 'Undefined community.');
     $this->forwardIf($request->isSmartphone(), 'timeline', 'smtCommunity');
-
-    $this->communityId = $request->getParameter('id');
-    $this->community = Doctrine::getTable('Community')->find($this->communityId);
-    $this->forward404Unless($this->community, 'Undefined community.');
     sfConfig::set('sf_nav_type', 'community');
-    $this->baseUrl = sfConfig::get('op_base_url');
-    $form = new sfForm();
-    $this->token = $form->getCSRFToken();
 
     return sfView::SUCCESS;
   }
@@ -54,11 +47,19 @@ class timelineActions extends sfActions
     $this->activity = Doctrine::getTable('ActivityData')->find($activityId);
     if (!$this->activity)
     {
-      return sfView::ERROR;
+      $this->redirect('default/error');
     }
-    $this->comment = Doctrine_Query::create()->from('ActivityData ad')->where('ad.in_reply_to_activity_id = ?', $activityId)->execute();
 
-    return sfView::SUCCESS; 
+    if ('community' === $this->activity->getForeignTable())
+    {
+      $this->isCommunity = true;
+      $communityId = $this->activity->getForeignId();
+      $this->community = Doctrine::getTable('Community')->find($communityId);
+      $this->memberId = $this->getUser()->getMember()->getId();
+    }
+    $this->viewPhoto = opTimeline::getViewPhoto();
+
+    return sfView::SUCCESS;
   }
 
   public function executeSns(opWebRequest $request)
@@ -66,19 +67,16 @@ class timelineActions extends sfActions
     $this->forwardIf($request->isSmartphone(), 'timeline', 'smtSns');
     $this->forward('default', 'error');
 
-    return sfView::SUCCESS; 
+    return sfView::SUCCESS;
   }
 
   public function executeSmtSns(opWebRequest $request)
   {
-    $this->baseUrl = sfConfig::get('op_base_url');
-    $form = new sfForm();
-    $this->token = $form->getCSRFToken();
     $this->viewPhoto = opTimeline::getViewPhoto();
 
     $this->setTemplate('smtSns');
 
-    return sfView::SUCCESS; 
+    return sfView::SUCCESS;
   }
 
   public function executeSmtShow(opWebRequest $request)
@@ -87,18 +85,15 @@ class timelineActions extends sfActions
     $this->activity = Doctrine::getTable('ActivityData')->find($activityId);
     if (!$this->activity)
     {
-      return sfView::ERROR;
+      $this->redirect('default/error');
     }
-    $this->comment = Doctrine_Query::create()->from('ActivityData ad')->where('ad.in_reply_to_activity_id = ?', $activityId)->execute();
+    $this->viewPhoto = opTimeline::getViewPhoto();
 
-    return sfView::SUCCESS; 
+    return sfView::SUCCESS;
   }
 
   public function executeSmtMember(opWebRequest $request)
   {
-    $this->memberId = (int)$request->getParameter('id', $this->getUser()->getMember()->getId());
-    $this->member = Doctrine::getTable('Member')->find($this->memberId);
-    opSmartphoneLayoutUtil::setLayoutParameters(array('member' => $this->member));
     $this->setTemplate('smtMember');
 
     return sfView::SUCCESS;
@@ -106,30 +101,8 @@ class timelineActions extends sfActions
 
   public function executeSmtCommunity(opWebRequest $request)
   {
-    $this->communityId = (int)$request->getParameter('id');
-    $this->community = Doctrine::getTable('Community')->find($this->communityId);
-    $this->forward404If(!$this->community->isPrivilegeBelong($this->getUser()->getMemberId()));
-    opSmartphoneLayoutUtil::setLayoutParameters(array('community' => $this->community));
     $this->setTemplate('smtCommunity');
 
     return sfView::SUCCESS;
-  }
-
-  public function executeTimelinePlugin(sfWebRequest $request)
-  {
-    return sfView::SUCCESS;
-  }
-
-  private function getScreenName($memberId)
-  {
-    $memberConfig = Doctrine::getTable('MemberConfig')->findOneByMemberIdAndName($memberId, 'op_screen_name');
-    if ($memberConfig)
-    {
-      return "@".$memberConfig->getValue();
-    }
-    else
-    {
-      return false;
-    }
   }
 }

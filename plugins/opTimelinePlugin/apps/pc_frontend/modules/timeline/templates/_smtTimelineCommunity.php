@@ -3,11 +3,11 @@
 //<![CDATA[
 var gorgon = {
       'target': 'community',
-      'target_id': <?php echo $id; ?>, 
+      'target_id': <?php echo $id; ?>,
       'count': '20',
       'post': {
         'foreign': 'community',
-        'foreignId': '<?php echo $id; ?>',
+        'foreignId': '<?php echo $id; ?>'
       }
     };
 var viewPhoto = '<?php echo $viewPhoto ?>';
@@ -44,29 +44,21 @@ var fileMaxSizeInfo = {
             <div class="timeline-post-body" id="timeline-body-context-${id}">
               {{html body_html}}
             </div>
+            </div>
+
           </div>
+
 
           <div class="timeline-post-control">
             <a href="#timeline-${id}" class="timeline-comment-link">コメントする</a>
             <span class="timeline-post-control-show">
               {{if public_status == 'friend' }}
               <span class="icon-lock"></span>
-              <span class="public-flag">マイフレンドまで</span>
+              <span class="public-flag"><?php echo $op_term['my_friend'] ?>まで</span>
               {{else public_status == 'private' }}
               <span class="icon-lock"></span>
               <span class="public-flag">公開しない</span>
               {{/if}}
-            </span>
-          </div>
-
-          <!-- LikePlugin -->
-          <div class="row like-wrapper" data-like-id="${id}" data-like-target="A" member-id="${member.id}" style="display: none; margin-left: 28px;">
-            <span class="span6" style="text-align: center;"> 
-              <a class="like-post">いいね！</a>
-              <a class="like-cancel">いいね！を取り消す</a>
-            </span>
-              <span class="span5" style="text-align: center;">
-              <a class="like-list"></a>
             </span>
           </div>
 
@@ -111,21 +103,11 @@ var fileMaxSizeInfo = {
               <div class="timeline-post-comment-body">
               {{html body_html}}
               </div>
-              <!-- Like Plugin -->
-              <div class="row like-wrapper" data-like-id="${id}" data-like-target="A" member-id="${member.id}" style="display: none; margin-left: 28px;">
-                <span class="span5" style="text-align: center;"> 
-                  <a class="like-post">いいね！</a>
-                  <a class="like-cancel">いいね！を取り消す</a>
-                </span>
-                <span class="span4" style="text-align: center;">
-                  <a class="like-list"></a>
-                </span>
-              </div>
             </div>
 </script>
 
 <div class="row">
-  <div class="gadget_header span12">コミュニティタイムライン</div>
+<div class="gadget_header span12"><?php echo $community->getName() ?><?php echo $op_term['activity'] ?></div>
 </div>
 
 <div id="timeline-list" class="span12" data-post-baseurl="<?php echo url_for('@homepage', array('absolute' => true)); ?>" data-last-id="" data-loadmore-id="" style="margin-left: 0px;">

@@ -9,52 +9,47 @@
 */
 
 /**
-* opMemberAction
+* timelineActions
 *
 * @package    OpenPNE
-* @subpackage action
+* @subpackage opTimelinePlugin
 * @author     tatsuya ichikawa <ichikawa@tejimaya.com>
 */
-class timelineActions extends opTimelineAction
+class timelineActions extends opTimelineActions
 {
-  public function preExecute()
-  {
-    $this->id = $this->getRequestParameter('id', $this->getUser()->getMemberId());
-  }
-
   public function executeDeleteTimeline($request)
   {
     $this->forward404Unless($request->hasParameter('id'));
 
-    $this->activity = Doctrine::getTable('ActivityData')->find($this->id);
+    $this->activity = Doctrine::getTable('ActivityData')->find($request->getParameter('id'));
     $this->forward404Unless($this->activity instanceof ActivityData);
     $this->forward404Unless($this->activity->getMemberId() == $this->getUser()->getMemberId());
 
     if ($request->isMethod(sfWebRequest::POST))
-    {   
+    {
       $request->checkCSRFProtection();
       $this->activity->delete();
       $this->getUser()->setFlash('notice', 'An %activity% was deleted.');
       $this->redirect('@homepage');
-    }     
+    }
   }
 
   public function executeComment($request)
   {
     $this->forward404Unless($request->hasParameter('id'));
 
-    $this->activity = Doctrine::getTable('ActivityData')->find($this->id);
+    $this->activity = Doctrine::getTable('ActivityData')->find($request->getParameter('id'));
     $this->forward404Unless($this->activity instanceof ActivityData);
 
     $this->form = new TimelineDataForm();
-    $this->form->setDefault('in_reply_to_activity_id', $this->id);
+    $this->form->setDefault('in_reply_to_activity_id', $request->getParameter('id'));
     $this->form->setDefault('public_flag', $this->activity->getPublicFlag());
   }
 
   public function executeUpdateTimeline($request)
   {
     if ($request->isMethod(sfWebRequest::POST))
-    {   
+    {
       $this->forward404Unless(opConfig::get('is_allow_post_activity'));
       parent::updateTimeline($request);
     }
@@ -64,10 +59,10 @@ class timelineActions extends opTimelineAction
   {
     $this->form = new ActivityDataForm();
 
-    $this->size = 15;
-    $this->pager = new opNonCountQueryPager('ActivityData', $this->size);
+    $size = 15;
+    $this->pager = new opNonCountQueryPager('ActivityData', $size);
     $q = Doctrine::getTable('ActivityData')->createQuery()
-      ->where('public_flag = 1')
+      ->where('public_flag = ?', ActivityDataTable::PUBLIC_FLAG_SNS)
       ->andWhere('foreign_table is null')
       ->orderBy('id desc');
     $this->pager->setQuery($q);

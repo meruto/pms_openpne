@@ -12,10 +12,9 @@
  * timeline actions.
  *
  * @package    OpenPNE
- * @subpackage timeline
+ * @subpackage opTimelinePlugin
  * @author     tatsuya ichikawa <ichikawa@tejimaya.com>
  */
-
 class opTimelinePluginActions extends sfActions
 {
   public function executeIndex(opWebRequest $request)
@@ -23,16 +22,16 @@ class opTimelinePluginActions extends sfActions
     $this->form = new opTimelinePluginConfigurationForm();
 
     if ($request->isMethod(sfRequest::POST))
-    {   
+    {
       $this->form->bind($request->getParameter($this->form->getName()));
       if ($this->form->isValid())
-      {   
+      {
         $this->form->save();
 
         $this->getUser()->setFlash('notice', 'Saved configuration successfully.');
 
         $this->redirect('opTimelinePlugin/index');
-      }   
-    }  
+      }
+    }
   }
 }

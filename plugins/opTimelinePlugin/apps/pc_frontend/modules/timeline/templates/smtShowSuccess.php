@@ -3,7 +3,7 @@
 //<![CDATA[
 var gorgon = {
       'activity_id': <?php echo $activity->getId() ?>,
-      'count': 1,
+      'count': 1
     };
 var MAXLENGTH = 140;
 var viewPhoto = '<?php echo $viewPhoto ?>';
@@ -42,21 +42,11 @@ var viewPhoto = '<?php echo $viewPhoto ?>';
             <span class="timeline-public-flag-show">
               {{if public_status == 'friend' }}
               <span class="icon-lock"></span>
-              <span class="public-flag">マイフレンドまで</span>
+              <span class="public-flag"><?php echo $op_term['my_friend'] ?>まで</span>
               {{else public_status == 'private' }}
               <span class="icon-lock"></span>
               <span class="public-flag">公開しない</span>
               {{/if}}
-            </span>
-          </div>
-          <!--Like Plugin -->
-          <div class="row like-wrapper" data-like-id="${id}" data-like-target="A" member-id="${member.id}" style="display: none; margin-left: 28px;">
-            <span class="span6" style="text-align: center;"> 
-              <a class="like-post">いいね！</a>
-              <a class="like-cancel">いいね！を取り消す</a>
-            </span>
-            <span class="span5" style="text-align: center;">
-              <a class="like-list"></a>
             </span>
           </div>
 
@@ -101,21 +91,11 @@ var viewPhoto = '<?php echo $viewPhoto ?>';
               {{html body_html}}
               </div>
             </div>
-            <!-- Like Plugin -->
-            <div class="row like-wrapper" data-like-id="${id}" data-like-target="A" member-id="${member.id}" style="display: none; margin-left: 28px;">
-              <span class="span5" style="text-align: center;"> 
-                <a class="like-post">いいね！</a>
-                <a class="like-cancel">いいね！を取り消す</a>
-              </span>
-              <span class="span4" style="text-align: center;">
-                <a class="like-list"></a>
-              </span>
-            </div>
           </div>
 </script>
 
 <div class="row">
-  <div class="gadget_header span12"><?php echo $activity->getMember()->getName(); ?>さんのタイムライン</div>
+  <div class="gadget_header span12"><?php echo $activity->getMember()->getName(); ?>さんの<?php echo $op_term['activity'] ?></div>
 </div>
 
 <div id="timeline-list" class="span12" data-post-baseurl="<?php echo url_for('@homepage'); ?>" data-last-id="" data-loadmore-id="">

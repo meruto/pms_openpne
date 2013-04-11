@@ -12,7 +12,7 @@
  * opTimelinePluginInstallTask
  *
  * @package    opTimelinePlugin
- * @subpackage task
+ * @subpackage opTimelinePlugin
  * @author     Shouta Kashiwagi <kashiwagi@tejimaya.com>
  */
 
@@ -23,12 +23,12 @@ class opTimelinePluginInstallTask extends sfBaseTask
     $this->namespace        = 'opTimelinePlugin';
     $this->name             = 'install';
     $this->briefDescription = 'Install Command for "opTimelinePlugin".';
- 
+
     $this->detailedDescription = <<<EOF
 Use this command to install "opTimelinePlugin".
 EOF;
   }
- 
+
   protected function execute($arguments = array(), $options = array())
   {
     // execute ./symfony doctrine:data-load
@@ -39,7 +39,7 @@ EOF;
     $sfPluginPublishAssetsTask = new sfPluginPublishAssetsTask($this->dispatcher, $this->formatter);
     $sfPluginPublishAssetsTask->run();
 
-    // execute ./symfomy cc
+    // execute ./symfony cc
     $sfCacheClearTask = new sfCacheClearTask($this->dispatcher, $this->formatter);
     $sfCacheClearTask->run($arguments = array(), $options = array('type' => 'all'));
   }

@@ -1,5 +1,5 @@
 /*********************************************************
-** jQuery timeilinePlugin functions
+** jQuery timelinePlugin functions
 ** how to use : $('#element').timelineComment();
 **              $('#element').timelineDelete();
 ** @parts     : opTimelinePlugin
@@ -8,10 +8,6 @@
 (function($){
 
   $.fn.timelineComment = function(settings){
-    settings = jQuery.extend({
-      loader_path: '',
-      callback: function(){},
-    });
 
     return this.each(function(){
       $(this).click(function(){
@@ -39,11 +35,28 @@
           success: function(data) {
             if ('success' == data.status)
             {
+              data.data.body_html = data.data.body;
               $('#comment-textarea-'+id).val('');
               $timelineLoader.hide();
               $('#timeline-post-comment-form-'+id).show();
               $postData = $('#timelineCommentTemplate').tmpl(data.data);
               $('#timeline-post-comment-form-'+id).before($postData);
+
+              $('button.timeline-post-delete-button').timelineDelete();
+              $('.timeline-post-delete-confirm-link').colorbox({
+                inline: true,
+                width: '610px',
+                opacity: '0.8',
+                onOpen: function(){ 
+                  $($(this).attr('href')).show(); 
+                },
+                onCleanup: function(){ 
+                  $($(this).attr('href')).hide();
+                },
+                onClosed: function(){
+                  timelineAllLoad();
+                }
+              });
             }
             else
             {

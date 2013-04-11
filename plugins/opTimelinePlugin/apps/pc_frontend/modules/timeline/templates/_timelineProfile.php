@@ -1,4 +1,8 @@
+<?php if (!isset($gadget)): ?>
+<div id="profileTimeline_<?php echo $memberId ?>" class="dparts profileTimeline"><div class="parts">
+<?php else: ?>
 <div id="profileTimeline_<?php echo $gadget->id ?>" class="dparts profileTimeline"><div class="parts">
+<?php endif; ?>
 
 <script type="text/javascript">
 //<![CDATA[
@@ -8,7 +12,7 @@ var gorgon = {
       'post': {
 
       },
-      'timer': '120000',
+      'timerCount': '120000'
     };
 var viewPhoto = '<?php echo $viewPhoto ?>';
 var MAXLENGTH = 140;
@@ -25,7 +29,7 @@ var MAXLENGTH = 140;
 
 <?php include_partial('timeline/timelineTemplate') ?>
 
-<div class="partsHeading"><h3>メンバーのタイムライン</h3></div>
+<div class="partsHeading"><h3>メンバーの<?php echo $op_term['activity'] ?></h3></div>
 
 <div class="timeline">
   <div style="display: none" id="timeline-submit-button" class="btn btn-primary timeline-submit" disabled="disabled"></div>
@@ -33,7 +37,7 @@ var MAXLENGTH = 140;
 
   <div id="timeline-list" data-last-id=""data-loadmore-id="">
   </div>
-    
+
   <button class="gorgon-button button" id="timeline-loadmore">もっと読む</button>
   <div id="timeline-loadmore-loading"><?php echo op_image_tag('ajax-loader.gif', array()) ?></div>
 </div>

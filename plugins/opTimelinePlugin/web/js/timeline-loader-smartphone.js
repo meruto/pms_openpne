@@ -2,37 +2,40 @@ $(function(){
   gorgon.image_size = 'small';
 
   timelineAllLoad();
-  
+
   $('.basic-mode').remove();
   $('.timeline-mode').show();
-  
+
   if ((navigator.userAgent.indexOf('iPhone') > 0 && navigator.userAgent.indexOf('iPad') == -1) || navigator.userAgent.indexOf('iPod') > 0) {
     $('#timeline-upload-photo-button').hide();
     $('#timeline-public-flag').css('margin', '0 0 0 0');
   }
- 
+
   $('#timeline_postform_submit').click( function() {
     $('#timeline-submit-error').hide();
     $('.photo-info').hide();
     $('#timeline_postform_submit').attr('disabled', 'disabled');
 
-    var body = $.trim($('#tosaka_postform_body').val());
+    var body = $('#tosaka_postform_body').val();
+    var a = $('<div />');
+    var flushBody = a.text(body).html();
+    body = body.replace(/"/g, '&quot;')
 
     var faceName = $('.face-name').text();
     var faceImg = $('#face').children('.span2').children('img').attr('src');
-    var flashTimelineDom = 
+    var flashTimelineDom =
           '<div class="flashTimelineDom">'
           + '<div class="timeline-post-member-image">'
-            + '<img src="' + faceImg + '" alt="member-image" width="23">'
+            + '<img src="' + faceImg + '" alt="member-image" width="23" />'
           + '</div>'
           + '<div class="timeline-post-content">'
             + '<div class="timeline-member-name">'
               + '<a>' + faceName + '</a>'
               + '<div class="timestamp">1分前</div>'
             + '</div>'
-            + '<div class="timeline-post-body">' + body + '</div>'
+            + '<div class="timeline-post-body">' + flushBody + '</div>'
             + '<span class="timeline-post-control">'
-              + '<img style="float: right; padding-right: 20px;" src="/images/ajax-loader.gif">'
+              + '<img style="float: right; padding-right: 20px;" src="/images/ajax-loader.gif" />'
             + '</span>'
           + '</div>'
           + '<div class="timeline-post-control">'
@@ -104,7 +107,7 @@ $(function(){
     $('#gorgon-loadmore').show();
   });
 
-  $('.timeline-comment-loadmore').live('click', function() {
+  $(document).on('click', '.timeline-comment-loadmore', function() {
     var timelineId = $(this).attr('data-timeline-id');
     var commentlist = $('#commentlist-' + timelineId);
     var commentLength = commentlist.children('.timeline-post-comment').length;
@@ -115,7 +118,7 @@ $(function(){
       url: openpne.apiBase + 'activity/commentSearch.json?apiKey=' + openpne.apiKey,
       data: {
         'timeline_id': timelineId,
-        'count': commentLength + 20,
+        'count': commentLength + 20
       },
       success: function(json){
         commentlist.children('.timeline-post-comment').remove();
@@ -129,18 +132,18 @@ $(function(){
       },
       error: function(XMLHttpRequest, textStatus, errorThrown){
         $('#commentlist-' + timelineId).hide();
-      },  
-    }); 
+      }
+    });
   });
-  
+
   $('#tosaka_postform_body').keyup( function() {
     lengthCheck($(this), $('#timeline_postform_submit'));
   });
-  
-  $('.timeline-post-comment-form-input').live('keyup', function() {
+
+  $(document).on('keyup', '.timeline-post-comment-form-input', function() {
     lengthCheck($(this), $('button[data-timeline-id=' + $(this).attr('data-timeline-id') + ']'));
   });
-  
+
   $('#timeline-submit-upload').change(function() {
     var fileName = $('#timeline-submit-upload').val();
     var dom = $('#photo-file-name');
@@ -154,7 +157,7 @@ $(function(){
     }
     $('.photo-info').show();
   });
-  
+
   $('#photo-remove').click( function() {
     $('#timeline-submit-upload').val('');
     $('#photo-file-name').text('');
@@ -176,10 +179,10 @@ function timelineAllLoad() {
       },
       error: function(XMLHttpRequest, textStatus, errorThrown){
         $('#timeline-list-loader').hide();
-        $('#timeline-list').text('タイムラインは投稿されていません。');
+        $('#timeline-list').text('投稿されていません。');
         $('#timeline-list').show();
         $('.flashTimelineDom').remove();
-      },
+      }
     });
 
   }
@@ -194,28 +197,12 @@ function timelineAllLoad() {
       },
       error: function(XMLHttpRequest, textStatus, errorThrown){
         $('#timeline-list-loader').hide();
-        $('#timeline-list').text('タイムラインは投稿されていません。');
+        $('#timeline-list').text('投稿されていません。');
         $('#timeline-list').show();
         $('.flashTimelineDom').remove();
       }
     });
   }
-}
-
-function timelineDifferenceLoad() {
-  var lastId = $('#timeline-list').attr('data-last-id');
-  if (gorgon)
-  {
-    gorgon.apiKey = openpne.apiKey;
-  }
-  else
-  {
-    gorgon = {apiKey: openpne.apiKey,}
-  }
-  //$.getJSON( openpne.apiBase + 'activity/search.json?count=20&since_id=' + lastId, gorgon, function(json){
-  $.getJSON( openpne.apiBase + 'activity/search.json?count=20&since_id=' + lastId, gorgon, function(json){
-    renderJSON(json, 'diff');
-  });
 }
 
 function timelineLoadmore() {
@@ -227,14 +214,13 @@ function timelineLoadmore() {
   }
   else
   {
-    gorgon = {apiKey: openpne.apiKey,}
+    gorgon = {apiKey: openpne.apiKey}
   }
   gorgon.max_id = loadmoreId;
 
   $.ajax({
     type: 'GET',
     url: openpne.apiBase + 'activity/search.json',
-    //url: openpne.apiBase + 'activity/search.json',
     data: gorgon,
     success: function(json){
       renderJSON(json, 'more');
@@ -242,12 +228,12 @@ function timelineLoadmore() {
     },
     error: function(XMLHttpRequest, textStatus, errorThrown){
       $('#timeline-loadmore-loading').hide();
-    },  
-  }); 
+    }
+  });
 }
 
 function renderJSON(json, mode) {
-  if (undefined == mode)
+  if ('undefined' === typeof mode)
   {
     mode = 'all';
   }
@@ -257,21 +243,21 @@ function renderJSON(json, mode) {
   }
   if(json.data && 0 < viewPhoto)
   {
-    for(i=0;i<json.data.length;i++)
-    {   
+    for(var i = 0; i < json.data.length; i++)
+    {
       if (!json.data[i].body_html.match(/img.*src=/))
-      {   
+      {
         if (json.data[i].body.match(/\.(jpg|jpeg|bmg|png|gif)/gi))
-        {   
-          json.data[i].body_html = json.data[i].body.replace(/((http:|https:)\/\/[\x21-\x26\x28-\x7e]+.(jpg|jpeg|bmg|png|gif))/gi, '<div><a href="$1"><img src="$1"></img></a></div>');
-        }   
+        {
+          json.data[i].body_html = json.data[i].body.replace(/((http:|https:)\/\/[\x21-\x26\x28-\x7e]+.(jpg|jpeg|bmg|png|gif))/gi, '<div><a href="$1"><img src="$1" /></a></div>');
+        }
         else if (json.data[i].body.match(/((http:|https:)\/\/[\x21-\x26\x28-\x7e]+)/gi))
-        {   
-          json.data[i].body_html = json.data[i].body.replace(/((http:|https:)\/\/[\x21-\x26\x28-\x7e]+)/gi, '<a href="$1"><div class="urlBlock"><img src="http://mozshot.nemui.org/shot?$1"><br />$1</div></a>');
-        }   
-      }   
+        {
+          json.data[i].body_html = json.data[i].body.replace(/((http:|https:)\/\/[\x21-\x26\x28-\x7e]+)/gi, '<a href="$1"><div class="urlBlock"><img src="http://mozshot.nemui.org/shot?$1" /><br />$1</div></a>');
+        }
+      }
       json.data[i].body_html = json.data[i].body_html.replace(/&lt;br \/&gt;/g, '<br />');
-    }   
+    }
   }
 
 
@@ -307,7 +293,7 @@ function renderJSON(json, mode) {
   }
   if(json.data)
   {
-    for(i=0;i<json.data.length;i++)
+    for(var i = 0; i < json.data.length; i++)
     {
       if(json.data[i].replies)
       {
@@ -332,22 +318,13 @@ function renderJSON(json, mode) {
   $('.timeago').timeago();
 }
 
-function convertTag(str) {
-  str = str.replace(/&/g,'&amp;');
-  str = str.replace(/"/g,'&quot;');
-  str = str.replace(/'/g,'&#039;');
-  str = str.replace(/</g,'&lt;');
-  str = str.replace(/>/g,'&gt;');
-  return str;
-}
-
 function tweetByData(data)
 {
   //reference　http://lagoscript.org/jquery/upload/documentation
   $('#timeline-submit-upload').upload(
     openpne.apiBase + 'activity/post.json', data,
     function (res) {
-      var resCheck = responceCheck(res);
+      var resCheck = responseCheck(res);
       if (false !== resCheck)
       {
         $('#timeline-submit-error').text(resCheck);
@@ -356,13 +333,13 @@ function tweetByData(data)
         return;
       }
 
-      res = res.replace(/<br \\=\"\">/g,  '<br />');
+      res = res.replace(/,\"body.*\"/g, '');
       returnData = JSON.parse(res);
 
       if (returnData.status === "error") {
 
         var errorMessages = {
-          file_size: 'ファイルサイズは' + fileMaxSize + 'までです',
+          file_size: 'ファイルサイズは' + fileMaxSizeInfo['format'] + 'までです',
           upload: 'アップロードに失敗しました',
           not_image: '画像をアップロードしてください',
           tweet: '投稿に失敗しました'
@@ -385,13 +362,19 @@ function tweetByData(data)
       $('#counter').text(MAXLENGTH);
 
     },
-    'text' //なぜかJSON形式でうけとることができなかった
+    'text'
     );
 }
 
 function lengthCheck(obj, target)
 {
-  if (0 < $.trim(obj.val()).length && 140 >= obj.val().length)
+  var objLength = obj.val().length;
+  if (obj.val().match(/\n/gm))
+  {
+    objLength = objLength + obj.val().match(/\n/gm).length;
+  }
+
+  if (0 < objLength && MAXLENGTH >= objLength)
   {
     target.removeAttr('disabled');
   }
@@ -401,9 +384,10 @@ function lengthCheck(obj, target)
   }
 }
 
-function responceCheck(res)
+function responseCheck(res)
 {
-  if (0 <= res.indexOf('\<pre'))
+  var matchResult = res.match(/\\<pre/);
+  if (null != matchResult)
   {
     return 'エラーが発生しました。再度読み込んで下さい。';
   }
